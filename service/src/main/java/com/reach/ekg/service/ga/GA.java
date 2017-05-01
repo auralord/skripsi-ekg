@@ -1,10 +1,5 @@
 package com.reach.ekg.service.ga;
 
-import com.reach.ekg.service.data.DataSource;
-import com.reach.ekg.service.data.DataSources;
-import com.reach.ekg.service.data.Dataset;
-import com.reach.ekg.service.svm.SVMFactory;
-import com.reach.ekg.service.svm.SVMParams;
 import com.reach.ekg.service.util.RandomUtil;
 
 import java.util.ArrayList;
@@ -89,6 +84,22 @@ public class GA {
         };
     }
 
+    public Chromosome gBest() {
+        return gBest;
+    }
+
+    public List<Double> getHistory() {
+        return history;
+    }
+
+    public void setFitnessFunction(FitnessFunction fitness) {
+        this.fitness = fitness;
+    }
+
+    public void setPopulation(List<Chromosome> population) {
+        this.population = population;
+    }
+
     public void run() {
         gBest = population.get(0);
         for (int i = 0; i < generation; i++) {
@@ -126,57 +137,55 @@ public class GA {
         }
     }
 
-    public Chromosome gBest() {
-        return gBest;
-    }
 
-    public static void main(String[] args) {
 
-        GA ga = new GA(new GAParams()
-                .setCr(0.0)
-                .setMr(0.0)
-                .setGeneration(1)
-                .setPopSize(1));
-
-        ga.population = Chromosome.generatePopulation(ga.popSize, 2160);
-        ga.fitness = new ClassificationFitness();
-
-        DataSource ds = DataSources.fromCSV("data/data-mlii-rev1.csv", ";", 0, 1, 2, 2160);
-        Dataset dataset = new Dataset(ds);
-        dataset.randomize();
-
-        SVMFactory.params = new SVMParams()
-                .setLambda(0.5)
-                .setGamma(0.01)
-                .setC(1)
-                .setEpsilon(0.00001)
-                .setThreshold(0)
-                .setMaxIter(10)
-                .setKernelParam(2);
-
-        SVMFactory.training = dataset.getTraining();
-        SVMFactory.trainingNormalised = dataset.getTrainingNomalised();
-        SVMFactory.testNormalised = dataset.getTestNormalised();
-
+    //    public static void main(String[] args) {
+//
+//        GA ga = new GA(new GAParams()
+//                .setCr(0.0)
+//                .setMr(0.0)
+//                .setGeneration(1)
+//                .setPopSize(1));
+//
+//        ga.population = Chromosome.generatePopulation(ga.popSize, 2160);
+//        ga.fitness = new ClassificationFitness();
+//
+//        DataSource ds = DataSources.fromCSV("data/data-mlii-rev1.csv", ";", 0, 1, 2, 2160);
+//        Dataset dataset = new Dataset(ds);
+//        dataset.randomize();
+//
+//        SVMFactory.params = new SVMParams()
+//                .setLambda(0.5)
+//                .setGamma(0.01)
+//                .setC(1)
+//                .setEpsilon(0.00001)
+//                .setThreshold(0)
+//                .setMaxIter(10)
+//                .setKernelParam(2);
+//
+//        SVMFactory.training = dataset.getTraining();
+//        SVMFactory.trainingNormalised = dataset.getTrainingNomalised();
+//        SVMFactory.testNormalised = dataset.getTestNormalised();
+//
 //        IntStream.of(SVMFactory.testNormalised.targets()).forEach(System.out::println);
-
-        System.out.println("PREPARE FOR JUSTICE");
+//
+//        System.out.println("PREPARE FOR JUSTICE");
 //        java.util.Date d1 = new java.util.Date();
 //        ga.run();
 //        java.util.Date d2 = new java.util.Date();
-
-        ga.history.forEach(System.out::println);
+//
+//        ga.history.forEach(System.out::println);
 //        System.out.println(d2.getTime() - d1.getTime());
-
-        double d;
-        do {
-            dataset.randomize();
-            SVMFactory.training = dataset.getTraining();
-            SVMFactory.trainingNormalised = dataset.getTrainingNomalised();
-            SVMFactory.testNormalised = dataset.getTestNormalised();
-            d = ga.fitness.calculate(null);
-            System.out.print(d + ": ");
-            System.out.println(dataset.getAsTest().toString());
-        } while (d < 0.70);
-    }
+//
+//        double d;
+//        do {
+//            dataset.randomize();
+//            SVMFactory.training = dataset.getTraining();
+//            SVMFactory.trainingNormalised = dataset.getTrainingNomalised();
+//            SVMFactory.testNormalised = dataset.getTestNormalised();
+//            d = ga.fitness.calculate(null);
+//            System.out.print(d + ": ");
+//            System.out.println(dataset.getAsTest().toString());
+//        } while (d < 0.70);
+//    }
 }
