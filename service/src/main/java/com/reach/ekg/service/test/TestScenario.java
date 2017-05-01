@@ -6,11 +6,11 @@ import com.reach.ekg.service.svm.SVMParams;
 public class TestScenario {
 
     // Params
-    public SVMParams svmParams;
-    public GAParams gaParams;
+    private SVMParams svmParams;
+    private GAParams gaParams;
 
     // Results
-    public boolean[] features;
-    public double[] history;
+    private boolean[] features;
+    private double[] history;
 
 }
