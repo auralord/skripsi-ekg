@@ -1,4 +1,4 @@
-package com.reach.ekg.service.ga;
+package com.reach.ekg.service.classification.ga;
 
 import java.util.ArrayList;
 import java.util.Arrays;

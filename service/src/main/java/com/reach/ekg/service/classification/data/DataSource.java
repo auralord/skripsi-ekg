@@ -1,4 +1,4 @@
-package com.reach.ekg.service.data;
+package com.reach.ekg.service.classification.data;
 
 public interface DataSource {
 

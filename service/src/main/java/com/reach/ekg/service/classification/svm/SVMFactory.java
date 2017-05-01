@@ -1,6 +1,6 @@
-package com.reach.ekg.service.svm;
+package com.reach.ekg.service.classification.svm;
 
-import com.reach.ekg.service.data.DataSource;
+import com.reach.ekg.service.classification.data.DataSource;
 
 public class SVMFactory {
 

@@ -1,7 +1,7 @@
-package com.reach.ekg.service.svm;
+package com.reach.ekg.service.classification.svm;
 
-import com.reach.ekg.service.data.DataSource;
-import com.reach.ekg.service.data.DataSources;
+import com.reach.ekg.service.classification.data.DataSource;
+import com.reach.ekg.service.classification.data.DataSources;
 
 import java.util.ArrayList;
 import java.util.List;

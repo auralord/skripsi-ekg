@@ -1,8 +1,5 @@
-package com.reach.ekg.service.svm;
+package com.reach.ekg.service.classification.svm;
 
-/**
- * Created by Reach on 23/03/2017.
- */
 public interface Kernel {
     public double apply(double[] x, double[] y);
 }

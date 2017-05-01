@@ -1,4 +1,4 @@
-package com.reach.ekg.service.svm;
+package com.reach.ekg.service.classification.svm;
 
 public class SVMParams {
 

@@ -1,4 +1,4 @@
-package com.reach.ekg.service.data;
+package com.reach.ekg.service.classification.data;
 
 import java.util.stream.IntStream;
 import java.util.stream.Stream;

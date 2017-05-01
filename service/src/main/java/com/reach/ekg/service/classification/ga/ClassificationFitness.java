@@ -1,8 +1,8 @@
-package com.reach.ekg.service.ga;
+package com.reach.ekg.service.classification.ga;
 
-import com.reach.ekg.service.data.DataSource;
-import com.reach.ekg.service.svm.BDTSVM;
-import com.reach.ekg.service.svm.SVMFactory;
+import com.reach.ekg.service.classification.data.DataSource;
+import com.reach.ekg.service.classification.svm.BDTSVM;
+import com.reach.ekg.service.classification.svm.SVMFactory;
 
 public class ClassificationFitness implements GA.FitnessFunction {
 

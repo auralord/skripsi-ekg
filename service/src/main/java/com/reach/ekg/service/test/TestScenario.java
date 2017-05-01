@@ -1,7 +1,7 @@
 package com.reach.ekg.service.test;
 
-import com.reach.ekg.service.ga.GAParams;
-import com.reach.ekg.service.svm.SVMParams;
+import com.reach.ekg.service.classification.ga.GAParams;
+import com.reach.ekg.service.classification.svm.SVMParams;
 
 public class TestScenario {
 

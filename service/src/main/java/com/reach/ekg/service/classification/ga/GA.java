@@ -1,4 +1,4 @@
-package com.reach.ekg.service.ga;
+package com.reach.ekg.service.classification.ga;
 
 import com.reach.ekg.service.util.RandomUtil;
 
