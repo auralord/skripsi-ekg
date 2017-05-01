@@ -1,5 +1,6 @@
 package com.reach.ekg.service.classification.ga;
 
+import com.reach.ekg.persistence.params.GAParams;
 import com.reach.ekg.service.util.RandomUtil;
 
 import java.util.ArrayList;
@@ -141,7 +142,7 @@ public class GA {
 
     //    public static void main(String[] args) {
 //
-//        GA ga = new GA(new GAParams()
+//        GA ga = new GA(new GAParam()
 //                .setCr(0.0)
 //                .setMr(0.0)
 //                .setGeneration(1)

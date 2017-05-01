@@ -1,5 +1,6 @@
 package com.reach.ekg.service.classification.svm;
 
+import com.reach.ekg.persistence.params.SVMParams;
 import com.reach.ekg.service.classification.data.DataSource;
 
 public class SVMFactory {

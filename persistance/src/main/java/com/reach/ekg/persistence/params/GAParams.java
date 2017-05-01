@@ -1,4 +1,4 @@
-package com.reach.ekg.service.classification.ga;
+package com.reach.ekg.persistence.params;
 
 public class GAParams {
 
@@ -6,6 +6,8 @@ public class GAParams {
     private double mr;
     private int generation;
     private int popSize;
+
+    public GAParams() {}
 
     public double getCr() {
         return cr;
@@ -41,5 +43,15 @@ public class GAParams {
     public GAParams setPopSize(int popSize) {
         this.popSize = popSize;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "GAParams{" +
+                "cr=" + cr +
+                ", mr=" + mr +
+                ", generation=" + generation +
+                ", popSize=" + popSize +
+                '}';
     }
 }

@@ -1,4 +1,4 @@
-package com.reach.ekg.service.classification.svm;
+package com.reach.ekg.persistence.params;
 
 public class SVMParams {
 
@@ -9,6 +9,18 @@ public class SVMParams {
     private double epsilon;
     private double threshold;
     private double maxiter;
+
+    public SVMParams() {}
+
+    public SVMParams(double kernelParam, double lambda, double gamma, double c, double epsilon, double threshold, double maxiter) {
+        this.kernelParam = kernelParam;
+        this.lambda = lambda;
+        this.gamma = gamma;
+        this.c = c;
+        this.epsilon = epsilon;
+        this.threshold = threshold;
+        this.maxiter = maxiter;
+    }
 
     public double getKernelParam() {
         return kernelParam;
@@ -71,5 +83,18 @@ public class SVMParams {
     public SVMParams setMaxIter(double maxiter) {
         this.maxiter = maxiter;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "SVMParams{" +
+                "kernelParam=" + kernelParam +
+                ", lambda=" + lambda +
+                ", gamma=" + gamma +
+                ", c=" + c +
+                ", epsilon=" + epsilon +
+                ", threshold=" + threshold +
+                ", maxiter=" + maxiter +
+                '}';
     }
 }

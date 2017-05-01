@@ -10,6 +10,7 @@
     <modules>
         <module>service</module>
         <module>server</module>
+        <module>persistance</module>
     </modules>
     <properties>
         <jackson.version>2.7.0</jackson.version>
