@@ -1,4 +1,4 @@
-package com.reach.ekg.persistence;
+package com.reach.ekg.persistence.results;
 
 public class ClassificationResult {
     private int predicted;

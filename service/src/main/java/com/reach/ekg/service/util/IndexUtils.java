@@ -58,4 +58,12 @@ public class IndexUtils {
     public static int[] listToArray(List<Integer> list) {
         return list.stream().mapToInt(Integer::intValue).toArray();
     }
+
+    public static int numOfTrue(boolean[] bools) {
+        int count = 0;
+        for (boolean b : bools ) {
+            if (b) count++;
+        }
+        return count;
+    }
 }

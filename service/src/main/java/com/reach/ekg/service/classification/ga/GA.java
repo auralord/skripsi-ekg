@@ -1,6 +1,11 @@
 package com.reach.ekg.service.classification.ga;
 
 import com.reach.ekg.persistence.params.GAParams;
+import com.reach.ekg.persistence.params.SVMParams;
+import com.reach.ekg.service.classification.data.DataSource;
+import com.reach.ekg.service.classification.data.DataSources;
+import com.reach.ekg.service.classification.data.Dataset;
+import com.reach.ekg.service.classification.svm.SVMFactory;
 import com.reach.ekg.service.util.RandomUtil;
 
 import java.util.ArrayList;
@@ -8,12 +13,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
+import static com.reach.ekg.service.util.RandomUtil.randomBoolean;
 import static java.lang.Math.ceil;
 
 public class GA {
 
     public interface FitnessFunction {
-        double calculate(boolean[] gene);
+        double calculate(boolean[] b);
     }
 
     public interface MutationOperator {
@@ -33,10 +39,10 @@ public class GA {
     private int popSize;
     private int generation;
 
-    private FitnessFunction fitness;
     private CrossoverOperator crossover;
     private MutationOperator mutation;
     private SelectionOperator selection;
+    private FitnessFunction fitness;
 
     private List<Chromosome> population;
     private List<Double> history = new ArrayList<>();
@@ -62,10 +68,10 @@ public class GA {
         // Single mutation
         this.mutation = (c1) -> {
             int i = r.nextInt(c1.genes().length);
-            boolean[] b = c1.genes().clone();
-            b[i] = !b[i];
+            boolean[] newGenes = c1.genes().clone();
+            newGenes[i] = !newGenes[i];
 
-            return new Chromosome(b);
+            return new Chromosome(newGenes);
         };
 
         // Binary tournament
@@ -85,24 +91,22 @@ public class GA {
         };
     }
 
-    public Chromosome gBest() {
-        return gBest;
-    }
-
-    public List<Double> getHistory() {
-        return history;
-    }
-
-    public void setFitnessFunction(FitnessFunction fitness) {
+    public void setFitness(FitnessFunction fitness) {
         this.fitness = fitness;
     }
 
-    public void setPopulation(List<Chromosome> population) {
-        this.population = population;
+    public void generatePopulation(int geneLength) {
+        population = new ArrayList<>();
+        for (int i = 0; i < popSize; i++) {
+            boolean[] b = randomBoolean(geneLength);
+            population.add(new Chromosome(b));
+        }
     }
+
 
     public void run() {
         gBest = population.get(0);
+        java.util.Date d1 = new java.util.Date();
         for (int i = 0; i < generation; i++) {
             System.out.println(i);
 
@@ -120,36 +124,45 @@ public class GA {
             }
 
             // Evaluation
-            population.stream().unordered().parallel()
+            population.parallelStream()
                     .forEach(c -> c.calculateFitness(fitness));
 
-            Chromosome currentGBest = population.stream()
-                    .unordered().parallel()
+            population.stream()
                     .max(Comparator.naturalOrder())
-                    .get();
-
-            if (currentGBest.fitness() > gBest.fitness()) {
-                gBest = currentGBest;
-            }
-            history.add(gBest.fitness());
+                    .ifPresent(this::compareGBest);
 
             // Selection
             population = selection.select(population, popSize);
         }
+        java.util.Date d2 = new java.util.Date();
+        System.out.println(d2.getTime() - d1.getTime());
     }
 
+    private void compareGBest(Chromosome currentGBest) {
+        if (currentGBest.fitness() > gBest.fitness()) {
+            gBest = currentGBest;
+        }
+        history.add(gBest.fitness());
+    }
 
+    public Chromosome gBest() {
+        return gBest;
+    }
 
-    //    public static void main(String[] args) {
+    public List<Double> getHistory() {
+        return history;
+    }
+
+//    public static void main(String[] args) {
 //
-//        GA ga = new GA(new GAParam()
-//                .setCr(0.0)
-//                .setMr(0.0)
-//                .setGeneration(1)
-//                .setPopSize(1));
+//        GA ga = new GA(new GAParams()
+//                .setCr(0.9)
+//                .setMr(0.1)
+//                .setGeneration(10)
+//                .setPopSize(10));
 //
-//        ga.population = Chromosome.generatePopulation(ga.popSize, 2160);
-//        ga.fitness = new ClassificationFitness();
+//        ga.setFitness(new ClassificationFitness());
+//        ga.generatePopulation(2160);
 //
 //        DataSource ds = DataSources.fromCSV("data/data-mlii-rev1.csv", ";", 0, 1, 2, 2160);
 //        Dataset dataset = new Dataset(ds);
@@ -161,14 +174,12 @@ public class GA {
 //                .setC(1)
 //                .setEpsilon(0.00001)
 //                .setThreshold(0)
-//                .setMaxIter(10)
+//                .setMaxIter(100)
 //                .setKernelParam(2);
 //
 //        SVMFactory.training = dataset.getTraining();
 //        SVMFactory.trainingNormalised = dataset.getTrainingNomalised();
 //        SVMFactory.testNormalised = dataset.getTestNormalised();
-//
-//        IntStream.of(SVMFactory.testNormalised.targets()).forEach(System.out::println);
 //
 //        System.out.println("PREPARE FOR JUSTICE");
 //        java.util.Date d1 = new java.util.Date();
@@ -177,16 +188,5 @@ public class GA {
 //
 //        ga.history.forEach(System.out::println);
 //        System.out.println(d2.getTime() - d1.getTime());
-//
-//        double d;
-//        do {
-//            dataset.randomize();
-//            SVMFactory.training = dataset.getTraining();
-//            SVMFactory.trainingNormalised = dataset.getTrainingNomalised();
-//            SVMFactory.testNormalised = dataset.getTestNormalised();
-//            d = ga.fitness.calculate(null);
-//            System.out.print(d + ": ");
-//            System.out.println(dataset.getAsTest().toString());
-//        } while (d < 0.70);
 //    }
 }

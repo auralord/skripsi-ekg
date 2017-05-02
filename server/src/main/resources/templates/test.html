@@ -2,9 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title data-th-text="${title}">Title</title>
+    <title>Title</title>
 </head>
 <body>
-    <p data-th-text="${body}">Lorem ipsum dolor sit amet</p>
+
+<div data-th-each="r : ${result.results}">
+    <p data-th-text="${r.features}">Tomorrow</p>
+    <p data-th-text="${r.history}">LUL</p>
+    <p data-th-text="${r.fitness}">123213</p>
+</div>
+
 </body>
 </html>

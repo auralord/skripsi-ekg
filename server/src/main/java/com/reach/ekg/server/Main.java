@@ -1,6 +1,7 @@
 package com.reach.ekg.server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.reach.ekg.persistence.results.AggregateTestResult;
 import spark.ModelAndView;
 import spark.Spark;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
@@ -20,10 +21,11 @@ public class Main {
 
     public static void main(String[] args) {
         ObjectMapper mapper = new ObjectMapper();
+        ThymeleafTemplateEngine engine = new ThymeleafTemplateEngine();
 
         Spark.port(8080);
         Spark.get("/hello/:user", (req, res) -> {
-            ThymeleafTemplateEngine engine = new ThymeleafTemplateEngine();
+
             HashMap<String, String> model = new HashMap<>();
             model.put("title", "Hello");
             model.put("body", req.params("user"));
@@ -49,6 +51,17 @@ public class Main {
         Spark.get("/finish", (req, res) -> {
             status = Status.FINISHED;
             return "status has been set to " + status.name();
+        });
+
+        Spark.get("/lul", (req, res) -> {
+            AggregateTestResult result = mapper.readValue(
+                    new java.io.File("result.json"), AggregateTestResult.class
+            );
+
+            HashMap<String, AggregateTestResult> map = new HashMap<>();
+            map.put("result", result);
+
+            return engine.render(new ModelAndView(map, "test"));
         });
 
     }

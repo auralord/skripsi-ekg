@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.stream.*;
 
 public class DataSources {
-    public static DataSource fromCSV(String csvPath, String delimiter, int indexRow,
-                                     int classRow, int dataRowStart, int dataLength) {
+    public static DataSource fromCSV(String csvPath, String delimiter, int indexCol,
+                                     int classRow, int dataColStart, int dataLength) {
         Path file = Paths.get(csvPath);
         try {
             List<String> lines = Files.readAllLines(file);
@@ -27,9 +27,9 @@ public class DataSources {
                         .mapToDouble(Double::parseDouble)
                         .toArray();
 
-                index[i] = (int) currentLine[indexRow];
+                index[i] = (int) currentLine[indexCol];
                 data[i] = new double[dataLength];
-                System.arraycopy(currentLine, dataRowStart, data[i], 0, dataLength);
+                System.arraycopy(currentLine, dataColStart, data[i], 0, dataLength);
                 target[i] = (int) currentLine[classRow];
             }
 

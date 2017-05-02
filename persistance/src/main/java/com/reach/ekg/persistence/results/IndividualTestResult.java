@@ -1,7 +1,4 @@
-package com.reach.ekg.persistence;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jdk.nashorn.internal.ir.annotations.Ignore;
+package com.reach.ekg.persistence.results;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,34 +20,6 @@ public class IndividualTestResult {
     private double fitness;
 
     public IndividualTestResult() {}
-
-    public IndividualTestResult(String begin, String end,
-                                boolean[] features, List<Double> history,
-                                List<ClassificationResult> classificationResults) {
-        this.begin = begin;
-        this.end = end;
-        this.features = features;
-        this.history = history;
-        this.classificationResults = classificationResults;
-
-        calculateFitness();
-    }
-
-    private void calculateFitness() {
-        int correct = (int) classificationResults.stream()
-                .filter(ClassificationResult::correct)
-                .count();
-        int total = classificationResults.size();
-        this.accuracy = (double) correct / (double) total;
-
-        int used = 0;
-        for (int i = 0; i < features.length; i++) {
-            if (features[i]) used++;
-        }
-        this.featuresPercentage = (double) used / (double) features.length;
-
-        this.fitness = 0.85 * accuracy + 0.15 * featuresPercentage;
-    }
 
     public String getBegin() {
         return begin;

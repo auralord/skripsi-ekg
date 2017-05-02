@@ -1,4 +1,4 @@
-package com.reach.ekg.persistence;
+package com.reach.ekg.persistence.results;
 
 import com.reach.ekg.persistence.params.GAParams;
 import com.reach.ekg.persistence.params.SVMParams;
