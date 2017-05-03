@@ -29,7 +29,7 @@ public class JobManager {
 
     private ObjectMapper mapper;
     private Job job;
-    private State state;
+    private String state;
 
     public JobManager(ObjectMapper mapper) {
         this.mapper = mapper;
@@ -62,7 +62,7 @@ public class JobManager {
     }
 
     private String stateToJson() {
-        return toJson(Message.STATE, state.name());
+        return toJson(Message.STATE, state);
     }
 
     private String toJson(Object o) {
@@ -77,15 +77,18 @@ public class JobManager {
      * Methods to handle service requests
      */
     public Object status(Request req, Response res) {
-        if (state != State.STARTED) {
-            return stateToJson();
+        if (state.equals(State.STARTED)) {
+            HashMap<String, Object> message = new HashMap<>();
+            message.put(Message.STATE, state);
+            message.put(Message.JOB, job);
+            return toJson(message);
         } else {
-            return toJson(job);
+            return stateToJson();
         }
     }
 
     public Object start(Request req, Response res) {
-        if (job != null && state == State.STARTED) {
+        if (job != null && state.equals( State.STARTED)) {
             state = State.WORKING;
             return stateToJson();
         } else {
@@ -94,17 +97,8 @@ public class JobManager {
     }
 
     public Object finish(Request req, Response res) {
-        if (job != null && state == State.WORKING) {
+        if (job != null && state.equals(State.WORKING)) {
             state = State.FINISHED;
-            return stateToJson();
-        } else {
-            return toJson(Message.ERROR, "No Job available");
-        }
-    }
-
-    public Object stop(Request req, Response res) {
-        if (job != null && state == State.WORKING) {
-            state = State.STOPPED;
             return stateToJson();
         } else {
             return toJson(Message.ERROR, "No Job available");
