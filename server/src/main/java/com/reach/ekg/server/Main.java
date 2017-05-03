@@ -1,74 +1,73 @@
 package com.reach.ekg.server;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.reach.ekg.persistence.results.AggregateTestResult;
-import spark.ModelAndView;
+import com.reach.ekg.persistence.params.GAParams;
+import com.reach.ekg.persistence.params.SVMParams;
+import com.reach.ekg.server.controllers.JobManager;
 import spark.Spark;
-import spark.template.thymeleaf.ThymeleafTemplateEngine;
 
-import java.util.HashMap;
+import java.io.File;
+import java.io.IOException;
+
+import static com.fasterxml.jackson.core.JsonParser.Feature.ALLOW_COMMENTS;
 
 public class Main {
 
-    public enum Status {
-        IDLE,
-        WORKING,
-        STOPPED,
-        FINISHED
-    }
-
-    private static Status status = Status.IDLE;
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        // Setup Jackson
         ObjectMapper mapper = new ObjectMapper();
-        ThymeleafTemplateEngine engine = new ThymeleafTemplateEngine();
+        mapper.configure(ALLOW_COMMENTS, true);
 
-        Spark.port(8080);
-        Spark.get("/hello/:user", (req, res) -> {
+        // Read config
+        JsonNode config = mapper.readTree(new File("config.json"));
+        int port = config.get("port").asInt();
 
-            HashMap<String, String> model = new HashMap<>();
-            model.put("title", "Hello");
-            model.put("body", req.params("user"));
+        // Setup server
+        Spark.port(port);
+        Spark.staticFileLocation("public");
 
-            return engine.render(new ModelAndView(model, "test"));
+        // Endpoints for service communication
+        JobManager manager = new JobManager(mapper);
+        Spark.path("/service", () -> {
+            Spark.before((req, res) -> res.header("Content-Type", "application/json"));
+            Spark.get("/status", manager::status);
+            Spark.post("/start", manager::start);
+            Spark.post("/finish", manager::finish);
+            Spark.post("/stop", manager::stop);
+            Spark.post("/reset", manager::reset);
         });
 
-        Spark.get("/status", "application/json", (req, res) -> {
-            return newMap("topkek", status.name());
-        }, mapper::writeValueAsString);
+        // User-accessible URLs
+        Spark.get("/add-job/:name/:repeat", (req, res) -> {
+            try {
+                String label = req.params("name");
+                int repeat = Integer.valueOf(req.params("repeat"));
+                SVMParams svmParams = new SVMParams()
+                        .setLambda(0.5)
+                        .setGamma(0.01)
+                        .setC(1)
+                        .setEpsilon(0.00001)
+                        .setThreshold(0)
+                        .setMaxIter(100)
+                        .setKernelParam(2);
 
+                GAParams gaParams = new GAParams()
+                        .setCr(0.9)
+                        .setMr(0.1)
+                        .setGeneration(10)
+                        .setPopSize(10);
 
-        Spark.get("/start", (req, res) -> {
-            status = Status.WORKING;
-            return "status has been set to " + status.name();
+                boolean success = manager.addJob(label, svmParams, gaParams, repeat);
+                if (success) {
+                    return "Job added";
+                } else {
+                    return "Can't add job";
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("ERROR: " + e.getMessage());
+                return "Must be number";
+            }
         });
-
-        Spark.get("/stop", (req, res) -> {
-            status = Status.STOPPED;
-            return "status has been set to " + status.name();
-        });
-
-        Spark.get("/finish", (req, res) -> {
-            status = Status.FINISHED;
-            return "status has been set to " + status.name();
-        });
-
-        Spark.get("/lul", (req, res) -> {
-            AggregateTestResult result = mapper.readValue(
-                    new java.io.File("result.json"), AggregateTestResult.class
-            );
-
-            HashMap<String, AggregateTestResult> map = new HashMap<>();
-            map.put("result", result);
-
-            return engine.render(new ModelAndView(map, "test"));
-        });
-
-    }
-
-    public static HashMap<String, String> newMap(String key, String value) {
-        HashMap<String, String> map = new HashMap<>();
-        map.put(key, value);
-        return map;
     }
 }

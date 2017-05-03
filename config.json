@@ -1,5 +1,4 @@
 {
-    // Data set config
     "pathToCSV": "data/data-mlii-rev1.csv",
     "delimiter": ";",
     "indexCol": 0,
@@ -7,7 +6,6 @@
     "dataColStart": 2,
     "dataLength": 2160,
 
-    // Web server config
     "hostname": "localhost",
     "port": 8080
 }
