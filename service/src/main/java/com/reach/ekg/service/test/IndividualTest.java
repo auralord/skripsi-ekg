@@ -7,26 +7,18 @@ import com.reach.ekg.persistence.params.SVMParams;
 import com.reach.ekg.service.classification.data.DataSource;
 import com.reach.ekg.service.classification.data.DataSources;
 import com.reach.ekg.service.classification.data.Dataset;
-import com.reach.ekg.service.classification.ga.ClassificationFitness;
 import com.reach.ekg.service.classification.ga.GA;
 import com.reach.ekg.service.classification.svm.BDTSVM;
 import com.reach.ekg.service.classification.svm.SVMFactory;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.reach.ekg.service.Config.config;
 import static com.reach.ekg.service.util.IndexUtils.numOfTrue;
+import static com.reach.ekg.service.util.DateUtils.now;
 
 public class IndividualTest {
-
-    private static String now() {
-        DateTimeFormatter formatter
-                = DateTimeFormatter.ofPattern("EEE, d MMM yyyy hh:mm:ss a");
-        return LocalDateTime.now().format(formatter);
-    }
 
     // Params
     private SVMParams svmParams;
@@ -58,7 +50,6 @@ public class IndividualTest {
         // Configure GA
         GA ga = new GA(gaParams);
         ga.generatePopulation(config.dataLength);
-//        ga.setFitness(new ClassificationFitness());
         ga.setFitness(genes -> {
             DataSource training =
                     DataSources.subFeatures(dataset.getTraining(), genes);

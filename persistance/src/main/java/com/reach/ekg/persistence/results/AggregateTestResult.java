@@ -8,16 +8,23 @@ import java.util.OptionalDouble;
 
 public class AggregateTestResult {
 
+    private String time;
+
     private GAParams gaParams;
     private SVMParams svmParams;
     private List<IndividualTestResult> results;
 
     private double averageAccuracy;
 
-    public AggregateTestResult() {}
+    public AggregateTestResult() {
+    }
 
-    public AggregateTestResult(GAParams gaParams, SVMParams svmParams,
+    public AggregateTestResult(String time,
+                               SVMParams svmParams,
+                               GAParams gaParams,
                                List<IndividualTestResult> results) {
+
+        this.time = time;
         this.gaParams = gaParams;
         this.svmParams = svmParams;
         this.results = results;
@@ -30,6 +37,10 @@ public class AggregateTestResult {
                 .average();
 
         averageAccuracy = acc.isPresent() ? acc.getAsDouble() : 0;
+    }
+
+    public String getTime() {
+        return time;
     }
 
     public GAParams getGaParams() {
@@ -67,69 +78,11 @@ public class AggregateTestResult {
     @Override
     public String toString() {
         return "AggregateTestResult{" +
-                "gaParams=" + gaParams +
+                ", time='" + time + '\'' +
+                ", gaParams=" + gaParams +
                 ", svmParams=" + svmParams +
                 ", results=" + results +
                 ", averageAccuracy=" + averageAccuracy +
                 '}';
     }
-
-//    public static void main(String[] args) {
-//
-//        List<Double> history = new ArrayList<>();
-//        history.add(0.1);
-//        history.add(0.34);
-//        history.add(0.88);
-//
-//        boolean[] features = {
-//                true, false, true,
-//                true, false, true,
-//                true, false, true,
-//                true, false, true
-//        };
-//
-//        List<ClassificationResult> classificationResults = new ArrayList<>();
-//        classificationResults.add(new ClassificationResult(1, 2));
-//        classificationResults.add(new ClassificationResult(2, 2));
-//        classificationResults.add(new ClassificationResult(3, 3));
-//        classificationResults.add(new ClassificationResult(1, 1));
-//        classificationResults.add(new ClassificationResult(1, 4));
-//
-//        String begin = LocalDateTime.now().toString();
-//        String end = LocalDateTime.now().toString();
-//
-//        IndividualTestResult result = new IndividualTestResult(
-//                begin, end, features, history, classificationResults
-//        );
-//
-//        SVMParams svmParams = new SVMParams()
-//                .setGamma(1);
-//
-//        GAParams gaParams = new GAParams()
-//                .setCr(0.1);
-//
-//        List<IndividualTestResult> list = new ArrayList<>();
-//        list.add(result);
-//        list.add(result);
-//        list.add(result);
-//
-//        AggregateTestResult aggregate = new AggregateTestResult(gaParams, svmParams, list);
-//
-//        ObjectMapper mapper = new ObjectMapper();
-//        try {
-//            mapper.writeValue(new java.io.File("result.json"), aggregate);
-//            AggregateTestResult test1 = mapper.readValue(
-//                    new java.io.File("result.json"),
-//                    AggregateTestResult.class
-//            );
-//
-//            test1.getResults().get(1).addClassificationResult(22, 42);
-//
-//            mapper.writeValue(new java.io.File("2.json"), test1);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//
-//    }
 }
