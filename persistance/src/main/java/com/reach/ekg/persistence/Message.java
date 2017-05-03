@@ -7,5 +7,6 @@ public class Message {
     public static final String REPEAT = "repeat";
     public static final String LABEL = "label";
     public static final String STATE = "state";
+    public static final String ERROR = "error";
 
 }
