@@ -1,6 +1,5 @@
 package com.reach.ekg.server.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reach.ekg.persistence.Message;
 import com.reach.ekg.persistence.State;
@@ -27,18 +26,19 @@ public class JobManager {
         }
     }
 
-    private ObjectMapper mapper;
     private Job job;
     private String state;
+    private int completed;
 
-    public JobManager(ObjectMapper mapper) {
-        this.mapper = mapper;
+
+    public JobManager() {
         this.state = State.IDLE;
     }
 
     public boolean addJob(String label, SVMParams svmParams, GAParams gaParams, int repeat) {
         if (job == null) {
             job = new Job(label, svmParams, gaParams, repeat);
+            completed = 0;
             state = State.STARTED;
             return true;
         } else {
@@ -49,65 +49,73 @@ public class JobManager {
     /*
      * Helper methods
      */
-    private String toJson(String k, String v) {
-        HashMap<String, String> map = new HashMap<>();
+    private HashMap<String, Object> map(String k, Object v) {
+        HashMap<String, Object> map = new HashMap<>();
         map.put(k, v);
-
-        try {
-            return mapper.writeValueAsString(map);
-        } catch (JsonProcessingException e) {
-            System.err.println("ERROR: " + e.getMessage());
-            return "{\"error\":\"" + e.getMessage() + "\"}";
-        }
+        return map;
     }
 
-    private String stateToJson() {
-        return toJson(Message.STATE, state);
+    private HashMap<String, Object> stateMap() {
+        return map(Message.STATE, state);
     }
 
-    private String toJson(Object o) {
-        try {
-            return mapper.writeValueAsString(o);
-        } catch (JsonProcessingException e) {
-            return "{\"error\":\"" + e.getMessage() + "\"}";
-        }
+    private Object error(Response res) {
+        res.status(500);
+        return map(Message.ERROR, "No job available");
     }
 
     /*
      * Methods to handle service requests
      */
     public Object status(Request req, Response res) {
-        if (state.equals(State.STARTED)) {
+        if (state.equals(State.STARTED) && job != null) {
             HashMap<String, Object> message = new HashMap<>();
             message.put(Message.STATE, state);
             message.put(Message.JOB, job);
-            return toJson(message);
+            return message;
         } else {
-            return stateToJson();
+            return stateMap();
         }
     }
 
     public Object start(Request req, Response res) {
-        if (job != null && state.equals( State.STARTED)) {
+        if (state.equals(State.STARTED) && job != null) {
             state = State.WORKING;
-            return stateToJson();
+            return stateMap();
         } else {
-            return toJson(Message.ERROR, "No job available");
+            return error(res);
+        }
+    }
+
+    public Object update(Request req, Response res) {
+        if (state.equals(State.WORKING) && job != null) {
+            completed++;
+            return stateMap();
+        } else {
+            return error(res);
         }
     }
 
     public Object finish(Request req, Response res) {
-        if (job != null && state.equals(State.WORKING)) {
+        if (state.equals(State.WORKING) && job != null) {
             state = State.FINISHED;
-            return stateToJson();
+            return stateMap();
         } else {
-            return toJson(Message.ERROR, "No Job available");
+            return error(res);
         }
     }
 
     public Object reset(Request req, Response res) {
         state = State.IDLE;
         job = null;
-        return stateToJson();
+        return stateMap();
+    }
+
+    /*
+     * Methods to handle client requests
+     */
+
+    public Object jobStatus(Request req, Response res) {
+        return map(Message.COMPLETED, completed);
     }
 }
