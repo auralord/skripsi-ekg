@@ -70,8 +70,14 @@ public class JobManager {
     public Object status(Request req, Response res) {
         if (state.equals(State.STARTED) && job != null) {
             HashMap<String, Object> message = new HashMap<>();
-            message.put(Message.STATE, state);
-            message.put(Message.JOB, job);
+
+            // Check if message is sent by service
+            if (req.userAgent().contains("Java")) {
+                message.put(Message.STATE, state);
+                message.put(Message.JOB, job);
+            }
+
+            message.put(Message.COMPLETED, completed);
             return message;
         } else {
             return stateMap();
@@ -109,13 +115,5 @@ public class JobManager {
         state = State.IDLE;
         job = null;
         return stateMap();
-    }
-
-    /*
-     * Methods to handle client requests
-     */
-
-    public Object jobStatus(Request req, Response res) {
-        return map(Message.COMPLETED, completed);
     }
 }
