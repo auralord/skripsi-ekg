@@ -7,17 +7,28 @@ import com.reach.ekg.persistence.results.IndividualTestResult;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import static com.reach.ekg.service.util.DateUtils.now;
 
 public class AggregateTest {
 
+    private String label;
+    private String time;
     private SVMParams svmParams;
     private GAParams gaParams;
     private AggregateTestResult result;
 
-    public AggregateTest(SVMParams svmParams, GAParams gaParams) {
+    private Runnable postIteration;
+
+    public AggregateTest(String label, SVMParams svmParams, GAParams gaParams) {
+        this.time = now();
+        this.label = label;
         this.svmParams = svmParams;
         this.gaParams = gaParams;
+    }
+
+    public void postIteration(Runnable c) {
+        this.postIteration = c;
     }
 
     public void run(int repeat) {
@@ -26,9 +37,16 @@ public class AggregateTest {
             IndividualTest test = new IndividualTest(svmParams, gaParams);
             test.run();
             individualResults.add(test.getResult());
+            postIteration.run();
         }
 
-        result = new AggregateTestResult(now(), svmParams, gaParams, individualResults);
+        result = new AggregateTestResult(
+                label,
+                time,
+                svmParams,
+                gaParams,
+                individualResults
+        );
     }
 
     public AggregateTestResult getResult() {

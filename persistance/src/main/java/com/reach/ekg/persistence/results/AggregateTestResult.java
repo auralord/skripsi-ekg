@@ -8,6 +8,7 @@ import java.util.OptionalDouble;
 
 public class AggregateTestResult {
 
+    private String label;
     private String time;
 
     private GAParams gaParams;
@@ -19,11 +20,13 @@ public class AggregateTestResult {
     public AggregateTestResult() {
     }
 
-    public AggregateTestResult(String time,
+    public AggregateTestResult(String label,
+                               String time,
                                SVMParams svmParams,
                                GAParams gaParams,
                                List<IndividualTestResult> results) {
 
+        this.label = label;
         this.time = time;
         this.gaParams = gaParams;
         this.svmParams = svmParams;
@@ -37,6 +40,18 @@ public class AggregateTestResult {
                 .average();
 
         averageAccuracy = acc.isPresent() ? acc.getAsDouble() : 0;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getTime() {
