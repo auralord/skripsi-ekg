@@ -1,6 +1,5 @@
 package com.reach.ekg.server.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reach.ekg.persistence.Message;
 import com.reach.ekg.persistence.State;
 import com.reach.ekg.persistence.params.GAParams;
@@ -46,9 +45,6 @@ public class JobManager {
         }
     }
 
-    /*
-     * Helper methods
-     */
     private HashMap<String, Object> map(String k, Object v) {
         HashMap<String, Object> map = new HashMap<>();
         map.put(k, v);
@@ -68,20 +64,18 @@ public class JobManager {
      * Methods to handle service requests
      */
     public Object status(Request req, Response res) {
-        if (state.equals(State.STARTED) && job != null) {
-            HashMap<String, Object> message = new HashMap<>();
+        HashMap<String, Object> message = stateMap();
 
-            // Check if message is sent by service
-            if (req.userAgent().contains("Java")) {
-                message.put(Message.STATE, state);
+        switch (state) {
+            case State.STARTED:
                 message.put(Message.JOB, job);
-            }
-
-            message.put(Message.COMPLETED, completed);
-            return message;
-        } else {
-            return stateMap();
+                break;
+            case State.WORKING:
+                message.put(Message.COMPLETED, completed);
+                break;
         }
+
+        return message;
     }
 
     public Object start(Request req, Response res) {
