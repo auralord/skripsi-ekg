@@ -37,7 +37,7 @@ public class AggregateTest {
             IndividualTest test = new IndividualTest(svmParams, gaParams);
             test.run();
             individualResults.add(test.getResult());
-            postIteration.run();
+            if (postIteration != null) postIteration.run();
         }
 
         result = new AggregateTestResult(
