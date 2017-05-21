@@ -16,7 +16,7 @@ public class Dataset {
     private DataSource testNormalised;
     private DataSource test;
 
-    HashMap<Integer, List<Integer>> asTest;
+    private HashMap<Integer, List<Integer>> asTest;
 
     private Random r = RandomUtil.r();
 
@@ -29,7 +29,7 @@ public class Dataset {
         // Select which data selected as test
         int n = orig.count();
         int numClass = 4;
-        int numTestPerClass = 4;
+        int numTestPerClass = 5;
         int numPerClass = n / numClass;
 
         asTest = new HashMap<>();

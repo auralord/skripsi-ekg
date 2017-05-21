@@ -57,8 +57,9 @@ public class BDTSVM {
 
     public void train() {
         // Calculate kernel
+        double d = params.getKernelParam();
 //        k = (x, y) -> pow(sumProduct(x, y), 2);
-        k = (x, y) -> Math.exp(-squaredDistance(x, y) / (2 * pow(10, 2)));
+        k = (x, y) -> Math.exp(squaredDistance(x, y) / (-2 * pow(d, 2)));
         int n = normalised.count();
 
         kernel = new double[n][n];
@@ -71,35 +72,8 @@ public class BDTSVM {
 
         // Do the rest
         generateBDT();
-
-//        root = new BDTNode();
-//        root.data.add(0);
-//        root.data.add(1);
-//        root.data.add(2);
-//        root.data.add(3);
-//        root.left = new BDTNode();
-//        root.left.data.add(0);
-//
-//        root.right = new BDTNode();
-//        root.right.data.add(1);
-//        root.right.data.add(2);
-//        root.right.data.add(3);
-//
-//        BDTNode pointer = root.right;
-//        pointer.left = new BDTNode();
-//        pointer.left.data.add(1);
-//        pointer.left.data.add(2);
-//
-//        pointer.right = new BDTNode();
-//        pointer.right.data.add(3);
-//
-//        pointer = pointer.left;
-//        pointer.left = new BDTNode();
-//        pointer.left.data.add(1);
-//        pointer.right = new BDTNode();
-//        pointer.right.data.add(2);
-
         train(root);
+        System.out.println(root);
     }
 
     private void generateBDT() {
@@ -113,7 +87,7 @@ public class BDTSVM {
         for (int i = 0; i < numClass; i++) {
             classAvg[i] = columnAvg(training.getAllRecordsInClass(i));
         }
-//
+
         for (int i = 0; i < numClass; i++) {
             for (int j = 0; j < numClass; j++) {
                 distance[i][j] = distance(classAvg[i], classAvg[j]);
@@ -122,7 +96,6 @@ public class BDTSVM {
         }
 
         processNode(root);
-//        System.out.println(root);
 //        java.util.Date d2 = new java.util.Date();
 //        System.out.println("generating bdt: " + (d2.getTime() - d1.getTime()));
     }
@@ -215,6 +188,7 @@ public class BDTSVM {
                 newKernel[i][j] = kernel[indices[i]][indices[j]];
             }
         }
+
         return newKernel;
     }
 
@@ -262,7 +236,7 @@ public class BDTSVM {
 //                .setEpsilon(0.000001)
 //                .setThreshold(0)
 //                .setMaxIter(2)
-//                .setKernelParam(2));
+//                .setKernelParam(0.7));
 //        svm.setTrainingNormalised(normalised);
 //        svm.setTraining(training);
 //        svm.train();

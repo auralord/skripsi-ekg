@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!-- GA-SVM parameter table -->
+<div data-th-fragment="param_table(ga, svm)" class="row">
+    <!-- GA -->
+    <div class="col-md-6">
+        <p class="lead">GA Params</p>
+        <table class="table table-outline">
+            <thead class="thead-default">
+            <tr>
+                <th>Param</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Population</td>
+                <td>[[${ga.popSize}]]</td>
+            </tr>
+            <tr>
+                <td>Generation</td>
+                <td>[[${ga.generation}]]</td>
+            </tr>
+            <tr>
+                <td>Cr</td>
+                <td>[[${ga.cr}]]</td>
+            </tr>
+            <tr>
+                <td>Mr</td>
+                <td>[[${ga.mr}]]</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- SVM-->
+    <div class="col-md-6">
+        <p class="lead">SVM Params</p>
+        <table class="table table-outline">
+            <thead class="thead-default">
+            <tr>
+                <th>Param</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Epsilon</td>
+                <td>[[${svm.epsilon}]]</td>
+            </tr>
+            <tr>
+                <td>C</td>
+                <td>[[${svm.C}]]</td>
+            </tr>
+            <tr>
+                <td>Gamma</td>
+                <td>[[${svm.gamma}]]</td>
+            </tr>
+            <tr>
+                <td>Lambda</td>
+                <td>[[${svm.lambda}]]</td>
+            </tr>
+            <tr>
+                <td>RBF delta</td>
+                <td>[[${svm.kernelParam}]]</td>
+            </tr>
+            <tr>
+                <td>Iteration</td>
+                <td>[[${svm.maxiter}]]</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

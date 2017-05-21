@@ -11,11 +11,11 @@ import java.util.HashMap;
 
 public class JobManager {
 
-    private static class Job {
-        public String label;
-        public SVMParams svmParams;
-        public GAParams gaParams;
-        public int repeat;
+    public static class Job {
+        private String label;
+        private SVMParams svmParams;
+        private GAParams gaParams;
+        private int repeat;
 
         Job(String label, SVMParams svmParams, GAParams gaParams, int repeat) {
             this.label = label;
@@ -23,12 +23,27 @@ public class JobManager {
             this.gaParams = gaParams;
             this.repeat = repeat;
         }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public SVMParams getSvmParams() {
+            return svmParams;
+        }
+
+        public GAParams getGaParams() {
+            return gaParams;
+        }
+
+        public int getRepeat() {
+            return repeat;
+        }
     }
 
     private Job job;
     private String state;
     private int completed;
-
 
     public JobManager() {
         this.state = State.IDLE;
@@ -43,6 +58,14 @@ public class JobManager {
         } else {
             return false;
         }
+    }
+
+    public boolean jobAvailable() {
+        return job != null;
+    }
+
+    public Job getJob() {
+        return job;
     }
 
     private HashMap<String, Object> map(String k, Object v) {

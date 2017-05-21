@@ -104,14 +104,14 @@ public class BinarySVM {
 
         b = -0.5 * (ayKMinus + ayKPlus);
 //        System.out.println(n);
-//        com.reach.ekg.backend.util.DoubleUtils.printArray(a);
+//        com.reach.ekg.service.util.DoubleUtils.printArray(a);
 //        com.reach.ekg.backend.util.DoubleUtils.printArray(e);
 //        System.out.println(kPlus + " - " + kMinus);
 //        printArray(ayKMinus);
 //        printArray(kernel[kMinus]);
 //        System.out.printf("%10.6f %10.6f\n", ayKPlus, ayKMinus);
 //        System.out.println(b);
-//        com.reach.ekg.backend.util.DoubleUtils.printMatrix(kernel);
+//        com.reach.ekg.service.util.DoubleUtils.printMatrix(kernel);
 //        com.reach.ekg.backend.util.DoubleUtils.printMatrix(hessian);
 //        printMatrix(data.all());System.out.println("-");
 //        IntStream.of(ds.targets()).mapToObj(i->(1 == i) ? "+1" : "-1").forEach(System.out::print);System.out.println();

@@ -1,5 +1,12 @@
 package com.reach.ekg.service.util;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
@@ -66,6 +73,28 @@ public class DoubleUtils {
             System.out.printf("%10.6f ", d[i]);
         }
         System.out.println();
+    }
+
+    public static void dumpMatrix(double[][] matrix) {
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("EEE, d MMM yyyy hh-mm-ss a");
+        String fileName = "dump/" + LocalDateTime.now().format(f)+ ".csv";
+
+        List<String> lines = new ArrayList<>();
+
+        for (double[] d : matrix) {
+            StringBuilder builder = new StringBuilder();
+            for (double d1: d) {
+                builder.append(d1).append(";");
+            }
+            lines.add(builder.toString());
+        }
+
+        try {
+            Files.write(Paths.get(fileName), lines);
+            System.out.println("File written: " + fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 

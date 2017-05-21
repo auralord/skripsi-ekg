@@ -4,6 +4,7 @@ import com.reach.ekg.persistence.results.ClassificationResult;
 import com.reach.ekg.persistence.results.IndividualTestResult;
 import com.reach.ekg.persistence.params.GAParams;
 import com.reach.ekg.persistence.params.SVMParams;
+import com.reach.ekg.service.Config;
 import com.reach.ekg.service.classification.data.DataSource;
 import com.reach.ekg.service.classification.data.DataSources;
 import com.reach.ekg.service.classification.data.Dataset;
@@ -51,6 +52,9 @@ public class IndividualTest {
         GA ga = new GA(gaParams);
         ga.generatePopulation(config.dataLength);
         ga.setFitness(genes -> {
+//            DataSource training = dataset.getTraining();
+//            DataSource normalised = dataset.getTrainingNomalised();
+//            DataSource test = dataset.getTestNormalised();
             DataSource training =
                     DataSources.subFeatures(dataset.getTraining(), genes);
             DataSource normalised =
@@ -91,6 +95,9 @@ public class IndividualTest {
 
         // Classification for one last time (TM)
         List<ClassificationResult> cResults = new ArrayList<>();
+//        DataSource training = dataset.getTraining();
+//        DataSource normalised = dataset.getTrainingNomalised();
+//        DataSource test = dataset.getTestNormalised();
         DataSource training =
                 DataSources.subFeatures(dataset.getTraining(), features);
         DataSource normalised =
@@ -130,5 +137,37 @@ public class IndividualTest {
 
     public IndividualTestResult getResult() {
         return result;
+    }
+
+    public static void main(String[] args) {
+        config = new Config();
+        config.pathToCSV = "data/data-mlii-rev1.csv";
+        config.delimiter = ";";
+        config.indexCol = 0;
+        config.classCol = 1;
+        config.dataColStart = 2;
+        config.dataLength = 2160;
+
+        SVMParams svmParams = new SVMParams()
+                .setLambda(0.5)
+                .setGamma(0.01)
+                .setC(1)
+                .setEpsilon(0.00001)
+                .setThreshold(0)
+                .setMaxIter(100)
+                .setKernelParam(3.1415926);
+
+        GAParams gaParams = new GAParams()
+                .setCr(0.9)
+                .setMr(0.1)
+                .setGeneration(10)
+                .setPopSize(10);
+
+        IndividualTest test = new IndividualTest(svmParams, gaParams);
+        test.run();
+        test.getResult().getClassificationResults().forEach(System.out::println);
+        test.getResult().getHistory().forEach(System.out::println);
+        System.out.print("Acc: ");
+        System.out.println(test.getResult().getAccuracy());
     }
 }
