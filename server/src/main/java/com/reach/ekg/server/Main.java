@@ -48,7 +48,7 @@ public class Main {
         });
 
         // User-accessible URLs
-        History history = new History(manager);
+        History history = new History();
         Spark.get("/thyme", history::viewHistory);
 
         // Only for testing

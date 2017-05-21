@@ -21,19 +21,19 @@
             <tbody>
             <tr>
                 <td>Population</td>
-                <td>[[${ga.popSize}]]</td>
+                <td id="gaPopSize">[[(${ga} != _)? ${ga.popSize} : 100]]</td>
             </tr>
             <tr>
                 <td>Generation</td>
-                <td>[[${ga.generation}]]</td>
+                <td id="gaGeneration">[[(${ga} != _)? ${ga.generation} : 100]]</td>
             </tr>
             <tr>
                 <td>Cr</td>
-                <td>[[${ga.cr}]]</td>
+                <td id="gaCr">[[(${ga} != _)? ${ga.cr} : 100]]</td>
             </tr>
             <tr>
                 <td>Mr</td>
-                <td>[[${ga.mr}]]</td>
+                <td id="gaMr">[[(${ga} != _)? ${ga.mr} : 100]]</td>
             </tr>
             </tbody>
         </table>
@@ -51,27 +51,27 @@
             <tbody>
             <tr>
                 <td>Epsilon</td>
-                <td>[[${svm.epsilon}]]</td>
+                <td id="svmEpsilon">[[(${svm} != _)? ${svm.epsilon} : 100]]</td>
             </tr>
             <tr>
                 <td>C</td>
-                <td>[[${svm.C}]]</td>
+                <td id="svmC">[[(${svm} != _)? ${svm.C} : 100]]</td>
             </tr>
             <tr>
                 <td>Gamma</td>
-                <td>[[${svm.gamma}]]</td>
+                <td id="svmGamma">[[(${svm} != _)? ${svm.gamma} : 100]]</td>
             </tr>
             <tr>
                 <td>Lambda</td>
-                <td>[[${svm.lambda}]]</td>
+                <td id="svmLambda">[[(${svm} != _)? ${svm.lambda} : 100]]</td>
             </tr>
             <tr>
                 <td>RBF delta</td>
-                <td>[[${svm.kernelParam}]]</td>
+                <td id="svmKernelParam">[[(${svm} != _)? ${svm.kernelParam} : 100]]</td>
             </tr>
             <tr>
                 <td>Iteration</td>
-                <td>[[${svm.maxiter}]]</td>
+                <td id="svmMaxiter">[[(${svm} != _)? ${svm.maxIter} : 100]]</td>
             </tr>
             </tbody>
         </table>

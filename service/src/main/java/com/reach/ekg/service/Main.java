@@ -50,7 +50,6 @@ public class Main {
                 case State.FINISHED:
                     Request.Post(server + RESET).execute();
                     System.out.println(status);
-                    i += 909090;
                     break;
 
                 default:
@@ -58,7 +57,6 @@ public class Main {
             }
 
             sleep(1000);
-            if (i > 3) break;
         } while (!status.equals(State.STOP_SERVICE));
     }
 

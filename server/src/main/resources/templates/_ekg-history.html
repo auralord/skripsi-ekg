@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head data-th-replace="~{base :: header(~{::title})}">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="...">
+    <link rel="shortcut icon" href="img/favicon.png">
+
+    <title>History - EKG</title>
+
+    <!-- Icons -->
+    <link href="../public/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../public/css/simple-line-icons.css" rel="stylesheet">
+
+    <!-- Main styles for this application -->
+    <link href="../public/css/style.css" rel="stylesheet">
+</head>
+
+<body class="app header-fixed sidebar-fixed">
+
+<header class="app-header navbar">
+    <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button">☰</button>
+    <a class="navbar-brand" href="#"></a>
+    <ul class="nav navbar-nav d-md-down-none">
+        <li class="nav-item">
+            <a class="nav-link navbar-toggler sidebar-toggler" href="#">☰</a>
+        </li>
+    </ul>
+    <ul class="nav navbar-nav ml-auto">
+        <li class="nav-item px-3">
+            <a class="nav-link" href="#" target="_blank">About</a>
+        </li>
+    </ul>
+</header>
+
+<div class="app-body">
+    <div class="sidebar">
+        <nav class="sidebar-nav">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html"><i class="icon-hourglass"></i> History</a>
+                </li>
+                <li class="nav-title">Create tests</li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html"><i class="icon-check"></i> Classification Test</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html"><i class="icon-graph"></i> Convergence Test</a>
+                </li>
+                <li class="nav-title">Other</li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html"><i class="icon-chart"></i> View Data</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="main">
+        <div class="container-fluid" style="margin-top:1.5rem">
+            <!-- Contents -->
+            <div class="card">
+                <div class="card-header">
+                    Current Job
+                </div>
+
+                <!-- Current Job -->
+                <div class="card-block" id="jobRunning" style="visible: none">
+                    <div class="clearfix">
+                        <h4 class="card-title" id="jobTitle">RBF-delta test #2 </h4>
+                        <h6 class="card-subtitle mb-2 text-muted" id="jobProgress">40 / 50 Completed</h6>
+                    </div>
+
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+                             role="progressbar" style="width: 75%" id="progressBar"></div>
+                    </div>
+                    <p style="margin-top: 1.0rem">
+                        <a class="btn btn-primary" data-toggle="collapse" href="#paramInfo"
+                           aria-expanded="false"
+                           aria-controls="paramInfo">Show params</a>
+                    </p>
+
+                    <div class="collapse" id="paramInfo">
+                        <div data-th-replace="elements :: param_table(_, _)"
+                             class="row">
+                            <!-- GA -->
+                            <div class="col-md-6">
+                                <p class="lead">GA Params</p>
+                                <table class="table table-outline">
+                                    <thead class="thead-default">
+                                    <tr>
+                                        <th>Param</th>
+                                        <th>Value</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>Population</td>
+                                        <td>100</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Generation</td>
+                                        <td>100</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cr</td>
+                                        <td>0.9</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mr</td>
+                                        <td>0.1</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- SVM-->
+                            <div class="col-md-6">
+                                <p class="lead">SVM Params</p>
+                                <table class="table table-outline">
+                                    <thead class="thead-default">
+                                    <tr>
+                                        <th>Param</th>
+                                        <th>Value</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>Epsilon</td>
+                                        <td>0.1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>C</td>
+                                        <td>0.1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Gamma</td>
+                                        <td>0.1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lambda</td>
+                                        <td>0.1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>RBF delta</td>
+                                        <td>0.1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Iteration</td>
+                                        <td>100</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empty Job -->
+                <div class="card-block" id="jobNone">
+                    No job is running.
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    History
+                </div>
+                <div class="card-block">
+                    <table class="table table-outline">
+                        <thead class="thead-default">
+                        <tr>
+                            <th>Label</th>
+                            <th>Date</th>
+                            <th>Accuracy</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <!-- History elements -->
+                        <tr data-th-each="h : ${history}">
+                            <td>
+                                <!-- TODO replace href-->
+                                <a data-th-text="${h.label}"
+                                   data-th-href="@{~/ok/ok}"
+                                   href="#">Gamma test #1</a>
+                            </td>
+                            <td>
+                                <span data-th-text="${h.time}">4 Maret 2017</span>
+                            </td>
+                            <td>
+                                <strong data-th-text="${h.accuracy} + '%'">70%</strong>
+                                <div class="progress progress-xs">
+                                    <div data-th-style="'width: ' + ${h.accuracy} + '%'"
+                                         data-th-classappend="${h.progressClass}"
+                                         class="progress-bar" style="width: 70%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-th-remove="all">
+                            <td><a href="#">Gamma test #1</a></td>
+                            <td>4 Maret 2017</td>
+                            <td>
+                                <div class="clearfix">
+                                    <div class="pull-left">
+                                        <strong>40%</strong>
+                                    </div>
+                                    <div class="pull-right">
+                                        <small class="text-muted">40/100 correct</small>
+                                    </div>
+                                </div>
+                                <div class="progress progress-xs">
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
+                                         aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-th-remove="all">
+                            <td><a href="#">Gamma test #1</a></td>
+                            <td>4 Maret 2017</td>
+                            <td>
+                                <div class="clearfix">
+                                    <div class="pull-left">
+                                        <strong>98%</strong>
+                                    </div>
+                                    <div class="pull-right">
+                                        <small class="text-muted">98/100 correct</small>
+                                    </div>
+                                </div>
+                                <div class="progress progress-xs">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 98%"
+                                         aria-valuenow="98" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--/*/ <th:block th:replace="~{base :: footer}"> /*/-->
+<!-- Bootstrap and necessary plugins -->
+<script src="../public/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="../public/bower_components/tether/dist/js/tether.min.js"></script>
+<script src="../public/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../public/bower_components/pace/pace.min.js"></script>
+
+<!-- Plugins and scripts required by all views -->
+<script src="../public/bower_components/chart.js/dist/Chart.min.js"></script>
+
+<!-- GenesisUI main scripts -->
+<script src="../public/js/app.js"></script>
+<!--/*/ </th:block> /*/-->
+<script data-th-src="@{~/js/history.js}" src="../public/js/history.js"></script>
+
+</body>
+
+</html>

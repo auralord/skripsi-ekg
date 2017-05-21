@@ -94,6 +94,7 @@ public class JobManager {
                 message.put(Message.JOB, job);
                 break;
             case State.WORKING:
+                message.put(Message.JOB, job);
                 message.put(Message.COMPLETED, completed);
                 break;
         }

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head data-th-fragment="header(title)">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link data-th-href="@{~/img/favicon.png}" rel="shortcut icon" href="img/favicon.png">
+
+    <title data-th-replace="${title}">Generic title</title>
+
+    <!-- Icons -->
+    <link data-th-href="@{~/css/font-awesome.min.css}" href="css/font-awesome.min.css" rel="stylesheet">
+    <link data-th-href="@{~/css/simple-line-icons.css}" href="css/simple-line-icons.css" rel="stylesheet">
+
+    <!-- Main styles for this application -->
+    <link data-th-href="@{~/css/style.css}" href="css/style.css" rel="stylesheet">
+</head>
+
+<body class="app header-fixed sidebar-fixed">
+
+<header class="app-header navbar">
+    <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button">☰</button>
+    <a class="navbar-brand" href="#"></a>
+    <ul class="nav navbar-nav d-md-down-none">
+        <li class="nav-item">
+            <a class="nav-link navbar-toggler sidebar-toggler" href="#">☰</a>
+        </li>
+    </ul>
+    <ul class="nav navbar-nav ml-auto">
+        <li class="nav-item px-3">
+            <a class="nav-link" href="#" target="_blank">About</a>
+        </li>
+    </ul>
+</header>
+
+<div class="app-body">
+    <div data-th-template="sidebar(active)" class="sidebar">
+        <nav class="sidebar-nav">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html"><i class="icon-hourglass"></i> History</a>
+                </li>
+                <li class="nav-title">Create tests</li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html"><i class="icon-check"></i> Classification Test</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html"><i class="icon-graph"></i> Convergence Test</a>
+                </li>
+                <li class="nav-title">Other</li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html"><i class="icon-chart"></i> View Data</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="main">
+        <div class="container-fluid" style="margin-top:1.5rem">
+            <!-- Contents -->
+
+        </div>
+    </div>
+</div>
+
+<!--/*/ <th:block th:fragment="footer"> /*/-->
+<!-- Bootstrap and necessary plugins -->
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/tether/dist/js/tether.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="bower_components/pace/pace.min.js"></script>
+
+<!-- GenesisUI main scripts -->
+<script src="js/app.js"></script>
+<!--/*/ </th:block> /*/-->
+</body>
+
+</html>

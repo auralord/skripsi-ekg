@@ -1,8 +1,6 @@
 package com.reach.ekg.server.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.reach.ekg.persistence.params.GAParams;
-import com.reach.ekg.persistence.params.SVMParams;
 import com.reach.ekg.persistence.results.AggregateTestResult;
 import com.reach.ekg.server.View;
 import spark.Request;
@@ -38,25 +36,10 @@ public class History {
             if (accuracy >= 70) this.progressClass = "bg-info";
             if (accuracy >= 90) this.progressClass = "bg-success";
         }
-
-        @Override
-        public String toString() {
-            return "HistoryEntry{" +
-                    "label='" + label + '\'' +
-                    ", time='" + time + '\'' +
-                    ", accuracy=" + accuracy +
-                    '}';
-        }
     }
 
     private final ObjectMapper mapper = new ObjectMapper();
     private final View view = new View();
-
-    private JobManager manager;
-
-    public History(JobManager manager) {
-        this.manager = manager;
-    }
 
     private HistoryEntry pathToEntry(String path){
         try {
@@ -86,16 +69,7 @@ public class History {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
-        // CurrentJob
-        JobManager.Job job;
-        if (manager.jobAvailable()) {
-            job = manager.getJob();
-        } else {
-            job = null;
-        }
-
         return view.template("_ekg-history")
-                .add("job", job)
                 .add("history", history)
                 .render();
     }
