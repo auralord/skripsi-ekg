@@ -17,5 +17,10 @@
             <artifactId>fluent-hc</artifactId>
             <version>4.5.2</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>persistance</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>
