@@ -6,6 +6,7 @@ import com.reach.ekg.persistence.params.GAParams;
 import com.reach.ekg.persistence.params.SVMParams;
 import com.reach.ekg.server.controllers.History;
 import com.reach.ekg.server.controllers.JobManager;
+import com.reach.ekg.server.controllers.NewJob;
 import spark.Spark;
 
 import java.io.File;
@@ -49,7 +50,12 @@ public class Main {
 
         // User-accessible URLs
         History history = new History();
-        Spark.get("/thyme", history::viewHistory);
+        Spark.get("/", history::viewHistory);
+        Spark.get("/history", history::viewHistory);
+
+        NewJob newJob = new NewJob(manager);
+        Spark.get("/new-job", newJob::index);
+        Spark.post("/new-job", newJob::handleNewJob);
 
         // Only for testing
         Spark.get("/add-job/:name/:repeat", (req, res) -> {

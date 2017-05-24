@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+<head data-th-replace="~{base :: default_header(~{::title})}">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="...">
-    <link rel="shortcut icon" href="img/favicon.png">
+    <link rel="shortcut icon" href="../public/img/favicon.png">
 
-    <title>...</title>
+    <title>Create New Test - EKG</title>
 
     <!-- Icons -->
-    <link href="css/font-awesome.min.css" rel="stylesheet">
-    <link href="css/simple-line-icons.css" rel="stylesheet">
+    <link href="../public/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../public/css/simple-line-icons.css" rel="stylesheet">
 
     <!-- Main styles for this application -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="../public/css/style.css" rel="stylesheet">
 </head>
 
 <body class="app header-fixed sidebar-fixed">
 
 <header class="app-header navbar">
     <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button">☰</button>
-    <a class="navbar-brand" href="#"></a>
+    <a class="navbar-brand" href="../public/#"></a>
     <ul class="nav navbar-nav d-md-down-none">
         <li class="nav-item">
-            <a class="nav-link navbar-toggler sidebar-toggler" href="#">☰</a>
+            <a class="nav-link navbar-toggler sidebar-toggler" href="../public/#">☰</a>
         </li>
     </ul>
     <ul class="nav navbar-nav ml-auto">
         <li class="nav-item px-3">
-            <a class="nav-link" href="#" target="_blank">About</a>
+            <a class="nav-link" href="../public/#" target="_blank">About</a>
         </li>
     </ul>
 </header>
@@ -40,18 +40,18 @@
         <nav class="sidebar-nav">
             <ul class="nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="index.html"><i class="icon-hourglass"></i> History</a>
+                    <a class="nav-link" href="../public/index.html"><i class="icon-hourglass"></i> History</a>
                 </li>
                 <li class="nav-title">Create tests</li>
                 <li class="nav-item">
-                    <a class="nav-link" href="index.html"><i class="icon-check"></i> Classification Test</a>
+                    <a class="nav-link" href="../public/index.html"><i class="icon-check"></i> Classification Test</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="index.html"><i class="icon-graph"></i> Convergence Test</a>
+                    <a class="nav-link" href="../public/index.html"><i class="icon-graph"></i> Convergence Test</a>
                 </li>
                 <li class="nav-title">Other</li>
                 <li class="nav-item">
-                    <a class="nav-link" href="index.html"><i class="icon-chart"></i> View Data</a>
+                    <a class="nav-link" href="../public/index.html"><i class="icon-chart"></i> View Data</a>
                 </li>
             </ul>
         </nav>
@@ -60,12 +60,40 @@
     <div class="main">
         <div class="container-fluid" style="margin-top:1.5rem">
             <!-- Contents -->
-            <div class="card">
-                <form action="" method="post" class="form-horizontal">
+
+            <!-- Test unavailable -->
+            <div class="card card-inverse bg-danger" data-th-if="${disabled} or ${error}">
+                <div class="card-block">
+                    <h3 class="card-title">Cannot create new test</h3>
+                    <p>
+                        <span data-th-text="${error_message}">There is test currently running in the background</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- New test -->
+            <div class="card" style="display: none">
+                <form data-th-action="@{~/new-job}" action="" method="post" class="form-horizontal">
                     <div class="card-header">
                         <strong>Create New Test</strong>
                     </div>
                     <div class="card-block">
+                        <div class="row form-group">
+                            <label class="col-md-2" for="label">Label</label>
+                            <div class="col-md-10">
+                                <input type="text" id="label" name="label" class="form-control"
+                                       placeholder="Label for this test..."
+                                       required data-th-disabled="${disabled}">
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-md-2" for="label">Repeat</label>
+                            <div class="col-md-10">
+                                <input type="text" id="repeat" name="repeat" class="form-control" value="10"
+                                       placeholder="How many times test should be repeated..."
+                                       required data-th-disabled="${disabled}">
+                            </div>
+                        </div>
                         <div class="row">
                             <!-- GA -->
                             <div class="col-lg-6">
@@ -74,28 +102,33 @@
                                     <label class="col-md-3 form-control-label" for="ga-pop">Population</label>
                                     <div class="col-md-9">
                                         <input type="text" id="ga-pop" name="ga-pop" class="form-control"
-                                               placeholder="Number of chromosomes...">
+                                               placeholder="Number of chromosomes..."
+                                               required data-th-disabled="${disabled}">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="ga-generation">Generation</label>
                                     <div class="col-md-9">
-                                        <input type="text" id="ga-generation" name="ga-generation" class="form-control"
-                                               placeholder="Number of generation..">
+                                        <input type="text" id="ga-generation" name="ga-generation"
+                                               class="form-control"
+                                               placeholder="Number of generation.."
+                                               required data-th-disabled="${disabled}">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="ga-cr">Cr</label>
                                     <div class="col-md-9">
                                         <input type="text" id="ga-cr" name="ga-cr" class="form-control"
-                                               placeholder="Crossover rate...">
+                                               placeholder="Crossover rate..."
+                                               required data-th-disabled="${disabled}">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="ga-mr">Mr</label>
                                     <div class="col-md-9">
                                         <input type="text" id="ga-mr" name="ga-mr" class="form-control"
-                                               placeholder="Mutation rate..">
+                                               placeholder="Mutation rate.."
+                                               required data-th-disabled="${disabled}">
                                     </div>
                                 </div>
                             </div>
@@ -105,47 +138,57 @@
                                     <label class="col-md-3 form-control-label" for="svm-epsilon">Epsilon</label>
                                     <div class="col-md-9">
                                         <input type="text" id="svm-epsilon" name="svm-epsilon" class="form-control"
-                                               placeholder="Epsilon...">
+                                               placeholder="Epsilon..."
+                                               required data-th-disabled="${disabled}">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="svm-c">C</label>
                                     <div class="col-md-9">
                                         <input type="text" id="svm-c" name="svm-c" class="form-control"
-                                               placeholder="C...">
+                                               placeholder="C..."
+                                               required data-th-disabled="${disabled}">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="svm-gamma">Gamma</label>
                                     <div class="col-md-9">
                                         <input type="text" id="svm-gamma" name="svm-gamma" class="form-control"
-                                               placeholder="Gamma...">
+                                               placeholder="Gamma..."
+                                               required data-th-disabled="${disabled}">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="svm-lambda">Lambda</label>
                                     <div class="col-md-9">
                                         <input type="text" id="svm-lambda" name="svm-lambda" class="form-control"
-                                               placeholder="Lambda...">
+                                               placeholder="Lambda..."
+                                               required data-th-disabled="${disabled}">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="svm-rbf-delta">RBF delta</label>
                                     <div class="col-md-9">
-                                        <input type="text" id="svm-rbf-delta" name="svm-rbf-delta" class="form-control"
-                                               placeholder="RBF delta...">
+                                        <input type="text" id="svm-rbf-delta" name="svm-rbf-delta"
+                                               class="form-control"
+                                               placeholder="RBF delta..."
+                                               required data-th-disabled="${disabled}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-3 form-control-label" for="svm-maxiter">Max Iteration</label>
+                                    <div class="col-md-9">
+                                        <input type="text" id="svm-maxiter" name="svm-maxiter" class="form-control"
+                                               placeholder="Number of iteration..."
+                                               required data-th-disabled="${disabled}">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="input-group">
-                            <span class="input-group-addon">Repeat</span>
-                            <input type="text" id="repeat" name="repeat" class="form-control"
-                                   placeholder="Number of tests..." value="10">
-                        </div>
                     </div>
                     <div class="card-footer">
-                        <input type="submit" class="btn btn-sm btn-primary" value="Submit"/>
+                        <input type="submit" class="btn btn-sm btn-primary" value="Submit"
+                               required data-th-disabled="${disabled}"/>
                     </div>
                 </form>
             </div>
@@ -153,6 +196,7 @@
     </div>
 </div>
 
+<!--/*/ <th:block th:replace="~{base :: footer}"> /*/-->
 <!-- Bootstrap and necessary plugins -->
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/tether/dist/js/tether.min.js"></script>
@@ -164,6 +208,7 @@
 
 <!-- GenesisUI main scripts -->
 <script src="js/app.js"></script>
+<!--/*/ </th:block> /*/-->
 </body>
 
 </html>
