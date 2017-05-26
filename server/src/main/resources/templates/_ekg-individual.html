@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+<head data-th-replace="~{base :: default_header(~{::title})}">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="...">
     <link rel="shortcut icon" href="img/favicon.png">
 
-    <title>...</title>
+    <title>Test Result - EKG</title>
 
     <!-- Icons -->
     <link href="../public/css/font-awesome.min.css" rel="stylesheet">
@@ -18,14 +18,19 @@
     <link href="../public/css/style.css" rel="stylesheet">
 </head>
 
-<body class="app header-fixed sidebar-fixed">
+<body class="app header-fixed sidebar-hidden">
 
 <header class="app-header navbar">
-    <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button">☰</button>
     <a class="navbar-brand" href="#"></a>
-    <ul class="nav navbar-nav d-md-down-none">
-        <li class="nav-item">
-            <a class="nav-link navbar-toggler sidebar-toggler" href="#">☰</a>
+    <ul class="nav navbar-nav hidden-md-down">
+        <li class="nav-item" style="padding: 1rem">
+            <a class="nav-link" href="#">History</a>
+        </li>
+        <li class="nav-item p-x-1" style="padding: 1rem">
+            <a class="nav-link" href="#">New Test</a>
+        </li>
+        <li class="nav-item p-x-1" style="padding: 1rem">
+            <a class="nav-link" href="#">View Data</a>
         </li>
     </ul>
     <ul class="nav navbar-nav ml-auto">
@@ -36,42 +41,102 @@
 </header>
 
 <div class="app-body">
-    <div class="sidebar">
-        <nav class="sidebar-nav">
-            <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html"><i class="icon-hourglass"></i> History</a>
-                </li>
-                <li class="nav-title">Create tests</li>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html"><i class="icon-check"></i> Classification Test</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html"><i class="icon-graph"></i> Convergence Test</a>
-                </li>
-                <li class="nav-title">Other</li>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html"><i class="icon-chart"></i> View Data</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
 
     <div class="main">
         <div class="container-fluid" style="margin-top:1.5rem">
             <!-- Contents -->
             <div class="row">
-                <!-- Parent Test -->
+
+                <!-- Sidebar -->
                 <div class="col-md-3">
                     <div class="card">
-                        <div class="card-header">Test label</div>
-                        <div class="card-block">
-
+                        <div class="card-header">
+                            <span data-th-text="${results.label}">RBF test</span>
                         </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Cras justo odio</li>
-                            <li class="list-group-item">Dapibus ac facilisis in</li>
-                            <li class="list-group-item">Vestibulum at eros</li>
+
+                        <!-- Info -->
+                        <div class="card-block">
+                            <dl class="row mb-0">
+                                <dt class="col-md-6">Date</dt>
+                                <dd class="col-md-6"><span data-th-text="${results.time}">4 Maret 2017</span></dd>
+
+                                <dt class="col-md-6">Avg. Accuracy</dt>
+                                <dd class="col-md-6"><span data-th-text="${results.averageAccuracy * 100} + '%'">90%</span></dd>
+
+                                <dt class="col-md-6">Params</dt>
+                                <dd class="col-md-6">
+                                    <a data-toggle="collapse" href="#paramInfo"
+                                       aria-expanded="false"
+                                       aria-controls="collapseExample">Show params</a>
+                                </dd>
+                                <dt class="col-md-6">Test Results</dt>
+                            </dl>
+                        </div>
+
+                        <!-- Results -->
+                        <ul class="list-group list-group-flush" data-th-remove="all-but-first">
+                            <li class="list-group-item" data-th-each="e : ${entries}">
+                                <div class="media">
+                                    <a data-th-text="${eStat.count}"
+                                       data-th-classappend="${active == eStat.count}? 'btn-' + ${e.colorClass} : 'btn-secondary'"
+                                       data-th-href="@{'~/results/' + ${id} + '/'+ ${eStat.count}}"
+                                       class="d-flex mr-3 btn btn-sm"
+                                       href="#">#01</a>
+                                    <div class="media-body">
+                                        <div class="clearfix">
+                                            <div class="pull-left">
+                                                <strong data-th-text="${e.accuracy} + '%'">70%</strong>
+                                            </div>
+                                            <div class="pull-right">
+                                                <small data-th-text="${e.numCorrect}" class="text-muted">
+                                                    1800 / 2160 correct
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="progress progress-xs">
+                                            <div data-th-style="'width: ' + ${e.accuracy} * 100 + '%'"
+                                                 data-th-classappend="'bg-' + ${e.colorClass}"
+                                                 class="progress-bar" style="width: 70%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="media">
+                                    <a class="d-flex mr-3 btn btn-sm btn-secondary" href="#">#02</a>
+                                    <div class="media-body">
+                                        <div class="clearfix">
+                                            <div class="pull-left">
+                                                <strong>50%</strong>
+                                            </div>
+                                            <div class="pull-right">
+                                                <small class="text-muted">1800 / 2160 correct</small>
+                                            </div>
+                                        </div>
+                                        <div class="progress progress-xs">
+                                            <div class="progress-bar bg-warning" style="width: 50%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="media">
+                                    <a class="d-flex mr-3 btn btn-sm btn-secondary" href="#">#10</a>
+                                    <div class="media-body">
+                                        <div class="clearfix">
+                                            <div class="pull-left">
+                                                <strong>80%</strong>
+                                            </div>
+                                            <div class="pull-right">
+                                                <small class="text-muted">1800 / 2160 correct</small>
+                                            </div>
+                                        </div>
+                                        <div class="progress progress-xs">
+                                            <div class="progress-bar bg-success" style="width: 80%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -81,29 +146,10 @@
                     <div class="card">
                         <div class="card-block">
 
-                            <!-- Info -->
-                            <h3>Test Info</h3>
-                            <dl class="row">
-                                <dt class="col-sm-3">Aggregate Test label</dt>
-                                <dd class="col-sm-9"><a href="#">RBF Test #3</a></dd>
-
-                                <dt class="col-sm-3">Date</dt>
-                                <dd class="col-sm-9">4 Maret 2017</dd>
-
-                                <dt class="col-sm-3">Accuracy</dt>
-                                <dd class="col-sm-9">90%</dd>
-
-                                <dt class="col-sm-3">Params</dt>
-                                <dd class="col-sm-9">
-                                    <a data-toggle="collapse" href="#paramInfo"
-                                       aria-expanded="false"
-                                       aria-controls="collapseExample">Show params</a>
-                                </dd>
-                            </dl>
-
                             <!-- Params -->
                             <div class="collapse" id="paramInfo">
-                                <div class="row">
+                                <div class="row"
+                                     data-th-include="~{elements :: param_table(${results.gaParams}, ${results.svmParams})}">
                                     <!-- GA -->
                                     <div class="col-md-6">
                                         <p class="lead">GA Params</p>
@@ -200,12 +246,16 @@
                                             <th>Status</th>
                                         </tr>
                                         </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td scope="row">1</td>
-                                            <td>Normal</td>
-                                            <td>Normal</td>
-                                            <td><span class="badge badge-success">Correct</span></td>
+                                        <tbody data-th-remove="all-but-first">
+                                        <tr data-th-each="r : ${details.classificationResults}">
+                                            <td data-th-text="${rStat.count}" scope="row">1</td>
+                                            <td data-th-text="${names[r.predicted]}">Normal</td>
+                                            <td data-th-text="${names[r.actual]}">Normal</td>
+                                            <td>
+                                                <span data-th-text="${r.correct()}? Correct : Incorrect"
+                                                      data-th-classappend="${r.correct()}? badge-success : badge-danger"
+                                                        class="badge">Correct</span>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td scope="row">2</td>
@@ -237,6 +287,7 @@
     </div>
 </div>
 
+<!--/*/ <th:block th:replace="~{base :: footer}"> /*/-->
 <!-- Bootstrap and necessary plugins -->
 <script src="../public/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="../public/bower_components/tether/dist/js/tether.min.js"></script>
@@ -248,6 +299,7 @@
 
 <!-- GenesisUI main scripts -->
 <script src="../public/js/app.js"></script>
+<!--/*/ </th:block> /*/-->
 </body>
 
 </html>

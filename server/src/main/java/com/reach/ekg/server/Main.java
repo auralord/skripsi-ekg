@@ -7,6 +7,7 @@ import com.reach.ekg.persistence.params.SVMParams;
 import com.reach.ekg.server.controllers.History;
 import com.reach.ekg.server.controllers.JobManager;
 import com.reach.ekg.server.controllers.NewJob;
+import com.reach.ekg.server.controllers.Results;
 import spark.Spark;
 
 import java.io.File;
@@ -56,6 +57,9 @@ public class Main {
         NewJob newJob = new NewJob(manager);
         Spark.get("/new-job", newJob::index);
         Spark.post("/new-job", newJob::handleNewJob);
+
+        Results results = new Results();
+        Spark.get("results/:id/:testNum", results::viewTestDetails);
 
         // Only for testing
         Spark.get("/add-job/:name/:repeat", (req, res) -> {

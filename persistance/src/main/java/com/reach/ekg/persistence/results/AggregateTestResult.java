@@ -93,6 +93,7 @@ public class AggregateTestResult {
     @Override
     public String toString() {
         return "AggregateTestResult{" +
+                "label = '" + label + '\'' +
                 ", time='" + time + '\'' +
                 ", gaParams=" + gaParams +
                 ", svmParams=" + svmParams +
