@@ -46,7 +46,7 @@ public class History {
             AggregateTestResult result = mapper.readValue(
                     new File(path), AggregateTestResult.class);
 
-            String label = result.getLabel();
+            String label = path.substring(path.lastIndexOf('\\') + 1).split("\\.")[0];
             String time = result.getTime();
             double accuracy = result.getAverageAccuracy() * 100;
 
