@@ -68,13 +68,13 @@ public class NewJob {
         }
     }
 
-    public Object index(Request req, Response res) {
+    public Object viewNewJobPage(Request req, Response res) {
         boolean disabled = manager.jobAvailable();
         View page = view.template("_ekg-newtest")
                 .add("disabled", disabled);
 
         if (disabled) {
-            page.add("error_message", "There is job currently in the background");
+            page.add("error_message", "There is job currently running in the background");
         }
 
         return page.render();

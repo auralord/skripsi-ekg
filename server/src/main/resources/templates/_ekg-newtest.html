@@ -18,9 +18,9 @@
     <link href="../public/css/style.css" rel="stylesheet">
 </head>
 
-<body class="app header-fixed sidebar-fixed">
+<body class="app header-fixed sidebar-hidden">
 
-<header class="app-header navbar">
+<header data-th-replace="~{base :: default_top_bar(new_test)}" class="app-header navbar">
     <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button">☰</button>
     <a class="navbar-brand" href="../public/#"></a>
     <ul class="nav navbar-nav d-md-down-none">
@@ -36,26 +36,6 @@
 </header>
 
 <div class="app-body">
-    <div class="sidebar">
-        <nav class="sidebar-nav">
-            <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="../public/index.html"><i class="icon-hourglass"></i> History</a>
-                </li>
-                <li class="nav-title">Create tests</li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../public/index.html"><i class="icon-check"></i> Classification Test</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../public/index.html"><i class="icon-graph"></i> Convergence Test</a>
-                </li>
-                <li class="nav-title">Other</li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../public/index.html"><i class="icon-chart"></i> View Data</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
 
     <div class="main">
         <div class="container-fluid" style="margin-top:1.5rem">
@@ -72,8 +52,8 @@
             </div>
 
             <!-- New test -->
-            <div class="card" style="display: none">
-                <form data-th-action="@{~/new-job}" action="" method="post" class="form-horizontal">
+            <div class="card">
+                <form data-th-action="@{~/new-test}" action="" method="post" class="form-horizontal">
                     <div class="card-header">
                         <strong>Create New Test</strong>
                     </div>

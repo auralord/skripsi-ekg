@@ -10,21 +10,27 @@
     <title data-th-replace="${title}">Generic title</title>
 
     <!-- Icons -->
-    <link data-th-href="@{~/css/font-awesome.min.css}" href="css/font-awesome.min.css" rel="stylesheet">
-    <link data-th-href="@{~/css/simple-line-icons.css}" href="css/simple-line-icons.css" rel="stylesheet">
+    <link data-th-href="@{~/css/font-awesome.min.css}" href="../public/css/font-awesome.min.css" rel="stylesheet">
+    <link data-th-href="@{~/css/simple-line-icons.css}" href="../public/css/simple-line-icons.css" rel="stylesheet">
 
     <!-- Main styles for this application -->
-    <link data-th-href="@{~/css/style.css}" href="css/style.css" rel="stylesheet">
+    <link data-th-href="@{~/css/style.css}" href="../public/css/style.css" rel="stylesheet">
 </head>
 
-<body data-th-fragment="body(content, active)" class="app header-fixed sidebar-fixed">
+<body class="app header-fixed sidebar-hidden">
 
-<header class="app-header navbar">
-    <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button">☰</button>
+<header data-th-fragment="default_top_bar(active)" class="app-header navbar">
     <a class="navbar-brand" href="#"></a>
-    <ul class="nav navbar-nav d-md-down-none">
-        <li class="nav-item">
-            <a class="nav-link navbar-toggler sidebar-toggler" href="#">☰</a>
+    <ul class="nav navbar-nav hidden-md-down">
+        <li class="nav-item" style="padding: 1rem">
+            <a data-th-classappend="${active} == history ? active"
+               data-th-href="@{~/history}"
+               class="nav-link" href="#">History</a>
+        </li>
+        <li class="nav-item p-x-1" style="padding: 1rem">
+            <a data-th-classappend="${active} == new_test ? active"
+               data-th-href="@{~/new-test}"
+               class="nav-link" href="#">New Test</a>
         </li>
     </ul>
     <ul class="nav navbar-nav ml-auto">
@@ -35,24 +41,7 @@
 </header>
 
 <div class="app-body">
-    <nav class="sidebar-nav">
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" href="index.html"><i class="icon-hourglass"></i> History</a>
-            </li>
-            <li class="nav-title">Create tests</li>
-            <li class="nav-item">
-                <a class="nav-link" href="index.html"><i class="icon-check"></i> Classification Test</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="index.html"><i class="icon-graph"></i> Convergence Test</a>
-            </li>
-            <li class="nav-title">Other</li>
-            <li class="nav-item">
-                <a class="nav-link" href="index.html"><i class="icon-chart"></i> View Data</a>
-            </li>
-        </ul>
-    </nav>
+
 </div>
 
 <div class="main">

@@ -18,9 +18,9 @@
     <link href="../public/css/style.css" rel="stylesheet">
 </head>
 
-<body class="app header-fixed sidebar-fixed">
+<body class="app header-fixed sidebar-hidden">
 
-<header class="app-header navbar">
+<header data-th-replace="~{base :: default_top_bar(history)}" class="app-header navbar">
     <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button">☰</button>
     <a class="navbar-brand" href="#"></a>
     <ul class="nav navbar-nav d-md-down-none">
@@ -36,26 +36,6 @@
 </header>
 
 <div class="app-body">
-    <div class="sidebar">
-        <nav class="sidebar-nav">
-            <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html"><i class="icon-hourglass"></i> History</a>
-                </li>
-                <li class="nav-title">Create tests</li>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html"><i class="icon-check"></i> Classification Test</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html"><i class="icon-graph"></i> Convergence Test</a>
-                </li>
-                <li class="nav-title">Other</li>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html"><i class="icon-chart"></i> View Data</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
 
     <div class="main">
         <div class="container-fluid" style="margin-top:1.5rem">

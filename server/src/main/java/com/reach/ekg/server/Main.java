@@ -55,8 +55,8 @@ public class Main {
         Spark.get("/history", history::viewHistory);
 
         NewJob newJob = new NewJob(manager);
-        Spark.get("/new-job", newJob::index);
-        Spark.post("/new-job", newJob::handleNewJob);
+        Spark.get("/new-test", newJob::viewNewJobPage);
+        Spark.post("/new-test", newJob::handleNewJob);
 
         Results results = new Results();
         Spark.get("results/:id/:testNum", results::viewTestDetails);
