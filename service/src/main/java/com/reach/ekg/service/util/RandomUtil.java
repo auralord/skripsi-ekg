@@ -17,4 +17,15 @@ public class RandomUtil {
         }
         return b;
     }
+
+    public static boolean[] rand(int size) {
+        double d = r.nextGaussian();
+
+        boolean[] b = new boolean[size];
+        for (int i = 0; i < size; i++) {
+            b[i] = (r().nextGaussian() <= d);
+        }
+
+        return b;
+    }
 }

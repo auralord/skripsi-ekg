@@ -1,11 +1,6 @@
 package com.reach.ekg.service.classification.ga;
 
 import com.reach.ekg.persistence.params.GAParams;
-import com.reach.ekg.persistence.params.SVMParams;
-import com.reach.ekg.service.classification.data.DataSource;
-import com.reach.ekg.service.classification.data.DataSources;
-import com.reach.ekg.service.classification.data.Dataset;
-import com.reach.ekg.service.classification.svm.SVMFactory;
 import com.reach.ekg.service.util.RandomUtil;
 
 import java.util.ArrayList;
@@ -13,7 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-import static com.reach.ekg.service.util.RandomUtil.randomBoolean;
+import static com.reach.ekg.service.util.RandomUtil.rand;
 import static java.lang.Math.ceil;
 
 public class GA {
@@ -98,7 +93,7 @@ public class GA {
     public void generatePopulation(int geneLength) {
         population = new ArrayList<>();
         for (int i = 0; i < popSize; i++) {
-            boolean[] b = randomBoolean(geneLength);
+            boolean[] b = rand(geneLength);
             population.add(new Chromosome(b));
         }
     }
@@ -106,7 +101,7 @@ public class GA {
 
     public void run() {
         gBest = population.get(0);
-        java.util.Date d1 = new java.util.Date();
+        long t1 = System.currentTimeMillis();
         for (int i = 0; i < generation; i++) {
             System.out.println(i);
 
@@ -134,8 +129,8 @@ public class GA {
             // Selection
             population = selection.select(population, popSize);
         }
-        java.util.Date d2 = new java.util.Date();
-        System.out.println(d2.getTime() - d1.getTime());
+        long t2 = System.currentTimeMillis();
+        System.out.println(t2 - t1);
     }
 
     private void compareGBest(Chromosome currentGBest) {
