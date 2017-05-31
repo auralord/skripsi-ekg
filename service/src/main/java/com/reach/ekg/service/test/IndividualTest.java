@@ -1,5 +1,7 @@
 package com.reach.ekg.service.test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reach.ekg.persistence.results.ClassificationResult;
 import com.reach.ekg.persistence.results.IndividualTestResult;
 import com.reach.ekg.persistence.params.GAParams;
@@ -12,8 +14,8 @@ import com.reach.ekg.service.classification.ga.GA;
 import com.reach.ekg.service.classification.svm.BDTSVM;
 import com.reach.ekg.service.classification.svm.SVMFactory;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
 import static com.reach.ekg.service.Config.config;
 import static com.reach.ekg.service.util.IndexUtils.numOfTrue;
@@ -43,6 +45,14 @@ public class IndividualTest {
                 config.dataColStart,
                 config.dataLength));
         dataset.randomize();
+
+//        HashMap<Integer, List<Integer>> map = new HashMap<>();
+//        map.put(0, Arrays.asList(15, 32, 23, 4, 10));
+//        map.put(1, Arrays.asList(28, 31, 12, 21, 15));
+//        map.put(2, Arrays.asList(28, 2, 21, 0, 16));
+//        map.put(3, Arrays.asList(16, 0, 7, 18, 5));
+//        dataset.setTest(map);
+
         SVMFactory.params = svmParams;
         SVMFactory.training = dataset.getTraining();
         SVMFactory.trainingNormalised = dataset.getTrainingNomalised();
@@ -52,9 +62,6 @@ public class IndividualTest {
         GA ga = new GA(gaParams);
         ga.generatePopulation(config.dataLength);
         ga.setFitness(genes -> {
-//            DataSource training = dataset.getTraining();
-//            DataSource normalised = dataset.getTrainingNomalised();
-//            DataSource test = dataset.getTestNormalised();
             DataSource training =
                     DataSources.subFeatures(dataset.getTraining(), genes);
             DataSource normalised =
@@ -76,11 +83,13 @@ public class IndividualTest {
                 if (y == y1) correct++;
             }
 
-            double f1 = (double) correct / (double) tests;
-            double f2 = 1 - (double) numOfTrue(genes) / (double) genes.length;
-            return 0.85 * f1 + 0.15 * f2;
+            int selected = numOfTrue(genes);
 
-//            return (double) correct / (double) tests;
+            double f1 = (double) correct / (double) tests;
+            double f2 = 1 - (double) selected/ (double) genes.length;
+            double fitness = 0.85 * f1 + 0.15 * f2;
+            System.out.printf("selected: %4s, f1: %.5f, fitness:%f\n", selected, f1, fitness);
+            return fitness;
         });
 
         // RUN!
@@ -95,9 +104,6 @@ public class IndividualTest {
 
         // Classification for one last time (TM)
         List<ClassificationResult> cResults = new ArrayList<>();
-//        DataSource training = dataset.getTraining();
-//        DataSource normalised = dataset.getTrainingNomalised();
-//        DataSource test = dataset.getTestNormalised();
         DataSource training =
                 DataSources.subFeatures(dataset.getTraining(), features);
         DataSource normalised =
@@ -133,6 +139,14 @@ public class IndividualTest {
         result.setAccuracy(accuracy);
         result.setFeaturesPercentage(featurePercentage);
         result.setFitness(fitness);
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String asTest = mapper.writeValueAsString(dataset.getAsTest());
+            System.out.println(asTest);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
     public IndividualTestResult getResult() {
@@ -141,7 +155,7 @@ public class IndividualTest {
 
     public static void main(String[] args) {
         config = new Config();
-        config.pathToCSV = "data/data-mlii-rev1.csv";
+        config.pathToCSV = "data/data-mlii-rev2.csv";
         config.delimiter = ";";
         config.indexCol = 0;
         config.classCol = 1;
@@ -155,13 +169,13 @@ public class IndividualTest {
                 .setEpsilon(0.00001)
                 .setThreshold(0)
                 .setMaxIter(100)
-                .setKernelParam(3.1415926);
+                .setKernelParam(3.22);
 
         GAParams gaParams = new GAParams()
                 .setCr(0.9)
                 .setMr(0.1)
                 .setGeneration(10)
-                .setPopSize(10);
+                .setPopSize(100);
 
         IndividualTest test = new IndividualTest(svmParams, gaParams);
         test.run();
