@@ -73,11 +73,9 @@ public class BDTSVM {
         // Do the rest
         generateBDT();
         train(root);
-        System.out.println(root);
     }
 
     private void generateBDT() {
-//        java.util.Date d1 = new java.util.Date();
         root = new BDTNode();
 
         int numClass = training.numClass();
@@ -96,8 +94,6 @@ public class BDTSVM {
         }
 
         processNode(root);
-//        java.util.Date d2 = new java.util.Date();
-//        System.out.println("generating bdt: " + (d2.getTime() - d1.getTime()));
     }
 
     private void processNode(BDTNode node) {
