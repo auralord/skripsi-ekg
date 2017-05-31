@@ -1,5 +1,5 @@
 {
-    "pathToCSV": "data/data-mlii-rev1.csv",
+    "pathToCSV": "data/data-mlii-rev2.csv",
     "delimiter": ";",
     "indexCol": 0,
     "classCol": 1,

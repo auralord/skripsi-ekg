@@ -1,0 +1,19 @@
+{
+  "label": "datarev2test",
+  "repeat": 5,
+  "gaParams": {
+    "cr": 0.9,
+    "mr": 0.1,
+    "generation": 25,
+    "popSize": 100
+  },
+  "svmParams": {
+    "kernelParam": 3.22,
+    "lambda": 0.5,
+    "gamma": 0.01,
+    "c": 1.0,
+    "epsilon": 1.0E-5,
+    "threshold": 0.0,
+    "maxIter": 100.0
+  }
+}

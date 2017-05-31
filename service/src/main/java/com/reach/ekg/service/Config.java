@@ -16,7 +16,21 @@ public class Config {
     public String hostname;
     public int port;
 
-    public Config() {}
+    public static void defaultConfig() {
+        config = new Config();
+        config.pathToCSV = "data/results.csv";
+        config.delimiter = ";";
+        config.indexCol = 0;
+        config.classCol = 1;
+        config.dataColStart = 2;
+        config.dataLength = 2160;
+
+        config.hostname = "localhost";
+        config.port = 8080;
+    }
+
+    public Config() {
+    }
 
     @Override
     public String toString() {
@@ -29,6 +43,6 @@ public class Config {
                 ", dataLength=" + dataLength +
                 ", hostname='" + hostname + '\'' +
                 ", port=" + port +
-                '}';
+                "}";
     }
 }
