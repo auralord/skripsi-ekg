@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 
 public class Dataset {
 
+    private final int NUM_OF_CLASSES = 4;
+    private final int TEST_PER_CLASSES = 5;
+
     private DataSource orig;
     private DataSource origNormalised;
     private DataSource trainingNomalised;
@@ -28,16 +31,14 @@ public class Dataset {
     public void randomize() {
         // Select which data selected as test
         int n = orig.count();
-        int numClass = 4;
-        int numTestPerClass = 5;
-        int numPerClass = n / numClass;
+        int numPerClass = n / NUM_OF_CLASSES;
 
         asTest = new HashMap<>();
-        for (int i = 0; i < numClass; i++) {
+        for (int i = 0; i < NUM_OF_CLASSES; i++) {
             List<Integer> list = r
                     .ints(0, numPerClass)
                     .distinct()
-                    .limit(numTestPerClass)
+                    .limit(TEST_PER_CLASSES)
                     .boxed()
                     .collect(Collectors.toList());
 
@@ -45,7 +46,20 @@ public class Dataset {
         }
 
         // Fill (pig)
-        int numTest = numClass * numTestPerClass;
+        separateTestTraining();
+    }
+
+    public void setTest(HashMap<Integer, List<Integer>> asTest) {
+        System.out.println("WARNING: data has been set manually");
+        this.asTest = asTest;
+        separateTestTraining();
+    }
+
+    private void separateTestTraining() {
+        int n = orig.count();
+        int numPerClass = n / NUM_OF_CLASSES;
+
+        int numTest = NUM_OF_CLASSES * TEST_PER_CLASSES;
         int numTraining = n - numTest;
 
         double[][] trainingData = new double[numTraining][];
@@ -58,7 +72,7 @@ public class Dataset {
 
         int curTest = 0;
         int curTraining = 0;
-        for (int i = 0; i < numClass; i++) {
+        for (int i = 0; i < NUM_OF_CLASSES; i++) {
             double[][] curData = orig.getAllRecordsInClass(i);
             double[][] curDataNormalised = origNormalised.getAllRecordsInClass(i);
             List<Integer> curList = asTest.get(i);
