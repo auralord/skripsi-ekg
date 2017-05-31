@@ -85,7 +85,7 @@
                                     <div class="media-body">
                                         <div class="clearfix">
                                             <div class="pull-left">
-                                                <strong data-th-text="${e.accuracy} + '%'">70%</strong>
+                                                <strong data-th-text="${#numbers.formatDecimal(e.accuracy,2,2)} + '%'">70%</strong>
                                             </div>
                                             <div class="pull-right">
                                                 <small data-th-text="${e.numCorrect}" class="text-muted">
@@ -94,7 +94,7 @@
                                             </div>
                                         </div>
                                         <div class="progress progress-xs">
-                                            <div data-th-style="'width: ' + ${e.accuracy} * 100 + '%'"
+                                            <div data-th-style="'width: ' + ${e.accuracy} + '%'"
                                                  data-th-classappend="'bg-' + ${e.colorClass}"
                                                  class="progress-bar" style="width: 70%"></div>
                                         </div>
