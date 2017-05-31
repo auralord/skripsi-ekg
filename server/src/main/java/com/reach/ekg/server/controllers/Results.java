@@ -46,7 +46,7 @@ public class Results {
 
     private List<ResultEntry> testResultsToEntries(AggregateTestResult results) {
         return results.getResults().stream().map(r -> {
-            double accuracy = r.getAccuracy();
+            double accuracy = r.getAccuracy() * 100;
             int numCorrect = (int) r.getClassificationResults().stream()
                     .filter(ClassificationResult::correct)
                     .count();
