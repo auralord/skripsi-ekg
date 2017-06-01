@@ -92,6 +92,15 @@ public class IndividualTest {
             return fitness;
         });
 
+        // Print data set info
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String asTest = mapper.writeValueAsString(dataset.getAsTest());
+            System.out.println(asTest);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
         // RUN!
         String begin = now();
         ga.run();
@@ -139,14 +148,6 @@ public class IndividualTest {
         result.setAccuracy(accuracy);
         result.setFeaturesPercentage(featurePercentage);
         result.setFitness(fitness);
-
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            String asTest = mapper.writeValueAsString(dataset.getAsTest());
-            System.out.println(asTest);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
     }
 
     public IndividualTestResult getResult() {
