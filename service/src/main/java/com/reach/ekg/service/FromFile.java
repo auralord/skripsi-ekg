@@ -10,10 +10,42 @@ import com.reach.ekg.service.util.FileWriter;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Filter;
 
 public class FromFile {
 
     public static void start(String path) {
+        File file = new File(path);
+        if (file.exists()) {
+            if (file.isDirectory())
+                readDir(path);
+            else
+                readFile(path);
+        } else {
+            System.out.println(path + " do not exits.");
+        }
+
+    }
+
+    private static void readDir(String path) {
+        try {
+            List<String> files = new ArrayList<>();
+            Files.newDirectoryStream(Paths.get(path), p -> p.toString().endsWith(".json"))
+                    .forEach(p -> files.add(p.toString()));
+
+            files.forEach(FromFile::readFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void readFile(String path) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode json = mapper.readTree(new File(path));
