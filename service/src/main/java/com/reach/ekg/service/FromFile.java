@@ -1,18 +1,15 @@
 package com.reach.ekg.service;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reach.ekg.persistence.params.GAParams;
 import com.reach.ekg.persistence.params.SVMParams;
 import com.reach.ekg.persistence.results.AggregateTestResult;
 import com.reach.ekg.service.test.AggregateTest;
+import com.reach.ekg.service.util.FileWriter;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 public class FromFile {
 
@@ -29,9 +26,9 @@ public class FromFile {
             AggregateTest test = new AggregateTest(label, svmParams, gaParams);
             test.run(repeat);
 
-            AggregateTestResult result = test.getResult();
             String resultPath = "results/" + label + ".json";
-            mapper.writeValue(new File(resultPath), result);
+            AggregateTestResult result = test.getResult();
+            FileWriter.writeResult(resultPath, result);
         } catch (IOException e) {
             System.err.println("Error:" + e.getMessage());
         }
