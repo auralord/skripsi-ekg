@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static spark.Spark.notFound;
 import static com.reach.ekg.server.Names.NAMES;
+import static spark.Spark.notFound;
 
 public class Results {
 

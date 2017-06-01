@@ -1,6 +1,5 @@
 package com.reach.ekg.server.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reach.ekg.persistence.params.GAParams;
 import com.reach.ekg.persistence.params.SVMParams;
 import com.reach.ekg.server.View;

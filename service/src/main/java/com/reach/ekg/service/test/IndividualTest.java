@@ -2,10 +2,10 @@ package com.reach.ekg.service.test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.reach.ekg.persistence.results.ClassificationResult;
-import com.reach.ekg.persistence.results.IndividualTestResult;
 import com.reach.ekg.persistence.params.GAParams;
 import com.reach.ekg.persistence.params.SVMParams;
+import com.reach.ekg.persistence.results.ClassificationResult;
+import com.reach.ekg.persistence.results.IndividualTestResult;
 import com.reach.ekg.service.Config;
 import com.reach.ekg.service.classification.data.DataSource;
 import com.reach.ekg.service.classification.data.DataSources;
@@ -14,12 +14,12 @@ import com.reach.ekg.service.classification.ga.GA;
 import com.reach.ekg.service.classification.svm.BDTSVM;
 import com.reach.ekg.service.classification.svm.SVMFactory;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.reach.ekg.service.Config.config;
-import static com.reach.ekg.service.util.IndexUtils.numOfTrue;
 import static com.reach.ekg.service.util.DateUtils.now;
+import static com.reach.ekg.service.util.IndexUtils.numOfTrue;
 
 public class IndividualTest {
 

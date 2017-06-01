@@ -9,9 +9,7 @@ import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
 import static com.reach.ekg.service.util.DoubleUtils.sumProduct;
-import static java.lang.Math.min;
-import static java.lang.Math.max;
-import static java.lang.Math.signum;
+import static java.lang.Math.*;
 
 public class BinarySVM {
 

@@ -8,13 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-
 import static com.reach.ekg.service.util.DoubleUtils.*;
 import static com.reach.ekg.service.util.IndexUtils.listToArray;
 import static com.reach.ekg.service.util.IndexUtils.max;
-import static java.lang.Math.pow;
-import static java.lang.Math.min;
 import static java.lang.Math.max;
+import static java.lang.Math.min;
+import static java.lang.Math.*;
 
 public class BDTSVM {
 

@@ -1,8 +1,6 @@
 package com.reach.ekg.service.classification.ga;
 
-import java.util.*;
-
-import static com.reach.ekg.service.util.RandomUtil.randomBoolean;
+import java.util.Arrays;
 
 public class Chromosome implements Comparable<Chromosome> {
 
