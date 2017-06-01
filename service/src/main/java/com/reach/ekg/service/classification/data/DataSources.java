@@ -1,6 +1,7 @@
 package com.reach.ekg.service.classification.data;
 
 import com.reach.ekg.service.util.DoubleUtils;
+import com.reach.ekg.service.util.IndexUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -40,18 +41,23 @@ public class DataSources {
     }
 
     public static DataSource subFeatures(DataSource ds, boolean[] features) {
-        int count = 0;
-        for (boolean b : features) {
-            if (b) count++;
-        }
+        int count = IndexUtils.numOfTrue(features);
 
         double[][] data = new double[ds.count()][count];
         for (int i = 0; i < ds.count(); i++) {
-            double[] d = ds.row(i);
-            data[i] = IntStream.range(0, features.length)
-                    .filter(x -> features[x])
-                    .mapToDouble(x -> d[x])
-                    .toArray();
+//            double[] d = ds.row(i);
+//            data[i] = IntStream.range(0, features.length)
+//                    .filter(x -> features[x])
+//                    .mapToDouble(x -> d[x])
+//                    .toArray();
+            data[i] = new double[count];
+            int j = 0;
+            for (int k = 0; k < features.length; k++) {
+                if (features[k]) {
+                    data[i][j] = ds.get(i, k);
+                    j++;
+                }
+            }
         }
 
         return new ArrayDataSource(ds.indices(), data, ds.targets());
