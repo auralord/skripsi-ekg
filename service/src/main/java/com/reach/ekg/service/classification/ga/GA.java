@@ -13,6 +13,8 @@ import static java.lang.Math.ceil;
 
 public class GA {
 
+    private static final double CONVERGENCE_THRESHOLD = 0.015;
+
     public interface FitnessFunction {
         double calculate(boolean[] b);
     }
@@ -126,6 +128,8 @@ public class GA {
                     .max(Comparator.naturalOrder())
                     .ifPresent(this::compareGBest);
 
+            if(hasConverged()) break;
+
             // Selection
             population = selection.select(population, popSize);
         }
@@ -138,6 +142,11 @@ public class GA {
             gBest = currentGBest;
         }
         history.add(gBest.fitness());
+    }
+
+    private boolean hasConverged() {
+        int i = history.size() - 1;
+        return i >= 25 && (history.get(i) - history.get(i - 10)) < CONVERGENCE_THRESHOLD;
     }
 
     public Chromosome gBest() {
