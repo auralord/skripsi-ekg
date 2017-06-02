@@ -5,6 +5,7 @@ import com.reach.ekg.service.classification.data.DataSource;
 import com.reach.ekg.service.util.DoubleUtils;
 import com.reach.ekg.service.util.IndexUtils;
 
+import java.util.OptionalDouble;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
@@ -59,10 +60,11 @@ public class BinarySVM {
             }
         }
 
-        double gamma = this.gamma / IntStream.range(0, n)
+        double gamma = this.gamma;
+        OptionalDouble maxHessian = IntStream.range(0, n)
                 .mapToDouble(i -> hessian[i][i])
-                .max().getAsDouble();
-
+                .max();
+        if(maxHessian.isPresent()) gamma /= maxHessian.getAsDouble();
 
         for (int iteration = 0; (iteration < maxIter); iteration++) {
             for (int i = 0; i < n; i++) {
@@ -82,11 +84,11 @@ public class BinarySVM {
             }
         }
 
-        int kPlus = IndexUtils.max(IntStream.range(0, n)
+        int kPlus = IndexUtils.maxOfArray(IntStream.range(0, n)
                 .mapToDouble(i -> ds.target(i) == 1 ? a[i] : 0)
                 .toArray());
 
-        int kMinus = IndexUtils.max(IntStream.range(0, n)
+        int kMinus = IndexUtils.maxOfArray(IntStream.range(0, n)
                 .mapToDouble(i -> ds.target(i) == -1 ? a[i] : 0)
                 .toArray());
 
@@ -117,7 +119,6 @@ public class BinarySVM {
 
     private boolean checkDA() {
         double[] daAbs = DoubleStream.of(da).map(Math::abs).toArray();
-//        System.out.println("da: " + DoubleUtils.max(daAbs));
         return DoubleUtils.max(daAbs) < epsilon;
     }
 
