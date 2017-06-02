@@ -46,11 +46,11 @@ public class IndividualTest {
                 config.dataLength));
         dataset.randomize();
 
-//        HashMap<Integer, List<Integer>> map = new HashMap<>();
-//        map.put(0, Arrays.asList(15, 32, 23, 4, 10));
-//        map.put(1, Arrays.asList(28, 31, 12, 21, 15));
-//        map.put(2, Arrays.asList(28, 2, 21, 0, 16));
-//        map.put(3, Arrays.asList(16, 0, 7, 18, 5));
+//        java.util.HashMap<Integer, List<Integer>> map = new java.util.HashMap<>();
+//        map.put(0, java.util.Arrays.asList(19,34,28,13,10));
+//        map.put(1, java.util.Arrays.asList(26,6,25,1,22));
+//        map.put(2, java.util.Arrays.asList(31,30,23,25,13));
+//        map.put(3, java.util.Arrays.asList(12,32,17,4,13));
 //        dataset.setTest(map);
 
         SVMFactory.params = svmParams;
@@ -62,6 +62,9 @@ public class IndividualTest {
         GA ga = new GA(gaParams);
         ga.generatePopulation(config.dataLength);
         ga.setFitness(genes -> {
+            int selected = numOfTrue(genes);
+            if (selected <= 0) return 0;
+
             DataSource training =
                     DataSources.subFeatures(dataset.getTraining(), genes);
             DataSource normalised =
@@ -82,8 +85,6 @@ public class IndividualTest {
                 int y1 = test.target(i);
                 if (y == y1) correct++;
             }
-
-            int selected = numOfTrue(genes);
 
             double f1 = (double) correct / (double) tests;
             double f2 = 1 - (double) selected/ (double) genes.length;
@@ -175,7 +176,7 @@ public class IndividualTest {
         GAParams gaParams = new GAParams()
                 .setCr(0.9)
                 .setMr(0.1)
-                .setGeneration(10)
+                .setGeneration(100)
                 .setPopSize(100);
 
         IndividualTest test = new IndividualTest(svmParams, gaParams);

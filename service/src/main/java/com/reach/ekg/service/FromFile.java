@@ -55,6 +55,7 @@ public class FromFile {
             String label = json.get("label").asText();
             int repeat = json.get("repeat").asInt();
 
+            System.out.println("RUNNING TEST: " + label);
             AggregateTest test = new AggregateTest(label, svmParams, gaParams);
             test.run(repeat);
 
