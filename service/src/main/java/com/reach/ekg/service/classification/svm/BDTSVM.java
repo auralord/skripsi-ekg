@@ -3,6 +3,7 @@ package com.reach.ekg.service.classification.svm;
 import com.reach.ekg.persistence.params.SVMParams;
 import com.reach.ekg.service.classification.data.DataSource;
 import com.reach.ekg.service.classification.data.DataSources;
+import com.reach.ekg.service.util.IndexUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,10 +11,10 @@ import java.util.stream.IntStream;
 
 import static com.reach.ekg.service.util.DoubleUtils.*;
 import static com.reach.ekg.service.util.IndexUtils.listToArray;
-import static com.reach.ekg.service.util.IndexUtils.max;
+import static com.reach.ekg.service.util.IndexUtils.maxOfMatrix;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
-import static java.lang.Math.*;
+import static java.lang.Math.pow;
 
 public class BDTSVM {
 
@@ -25,17 +26,6 @@ public class BDTSVM {
 
         BDTNode() {
             this.data = new ArrayList<>();
-        }
-
-        @Override
-        public String toString() {
-            if (data.size() == 1) {
-                return data.toString();
-            } else {
-                return data.toString() + "{" +
-                        left.toString() + " - " +
-                        right.toString() + "}";
-            }
         }
     }
 
@@ -97,7 +87,7 @@ public class BDTSVM {
 
     private void processNode(BDTNode node) {
         int[] indices = listToArray(node.data);
-        int[] furthest = max(distance, indices);
+        int[] furthest = maxOfMatrix(distance, indices);
         int left = min(furthest[0], furthest[1]);
         int right = max(furthest[0], furthest[1]);
 

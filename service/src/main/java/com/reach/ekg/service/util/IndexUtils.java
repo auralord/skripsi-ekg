@@ -5,7 +5,7 @@ import java.util.function.IntToDoubleFunction;
 
 public class IndexUtils {
 
-    public static int max(double[] d) {
+    public static int maxOfArray(double[] d) {
         int max = 0;
         for (int i = 0; i < d.length; i++) {
             if (d[i] > d[max]) {
@@ -15,7 +15,7 @@ public class IndexUtils {
         return max;
     }
 
-    public static int[] max(double[][] d) {
+    public static int[] maxOfMatrix(double[][] d) {
         int maxX = 0;
         int maxY = 0;
         for (int i = 0; i < d.length; i++) {
@@ -29,7 +29,7 @@ public class IndexUtils {
         return new int[]{maxX, maxY};
     }
 
-    public static int[] max(double[][] d, int[] indices) {
+    public static int[] maxOfMatrix(double[][] d, int[] indices) {
         int maxX = 0;
         int maxY = 0;
         for (int i = 0; i < indices.length; i++) {
@@ -43,7 +43,7 @@ public class IndexUtils {
         return new int[]{maxX, maxY};
     }
 
-    public static int max(int[] indices, IntToDoubleFunction func) {
+    public static int maxOfFunction(int[] indices, IntToDoubleFunction func) {
         int maxIndex = 0;
         double maxValue = func.applyAsDouble(maxIndex);
         for (int i = 0; i < indices.length; i++) {
