@@ -2,6 +2,7 @@ package com.reach.ekg.server.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reach.ekg.persistence.results.AggregateTestResult;
+import com.reach.ekg.persistence.results.IndividualTestResult;
 import com.reach.ekg.server.View;
 import spark.Request;
 import spark.Response;
@@ -13,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
 public class History {
@@ -20,21 +22,21 @@ public class History {
     private static class HistoryEntry {
         public String label;
         public String time;
-        public double accuracy;
+        public double fitness;
         public String progressClass;
 
         public HistoryEntry() {
         }
 
-        public HistoryEntry(String label, String time, double accuracy) {
+        public HistoryEntry(String label, String time, double fitness) {
             this.label = label;
             this.time = time;
-            this.accuracy = accuracy;
+            this.fitness = fitness;
 
             this.progressClass = "bg-danger";
-            if (accuracy >= 50) this.progressClass = "bg-warning";
-            if (accuracy >= 70) this.progressClass = "bg-info";
-            if (accuracy >= 90) this.progressClass = "bg-success";
+            if (this.fitness >= 0.50) this.progressClass = "bg-warning";
+            if (this.fitness >= 0.65) this.progressClass = "bg-info";
+            if (this.fitness >= 0.80) this.progressClass = "bg-success";
         }
     }
 
@@ -48,9 +50,14 @@ public class History {
 
             String label = path.substring(path.lastIndexOf('\\') + 1).split("\\.")[0];
             String time = result.getTime();
-            double accuracy = result.getAverageAccuracy() * 100;
 
-            return new HistoryEntry(label, time, accuracy);
+            OptionalDouble opt = result.getResults().stream()
+                    .mapToDouble(IndividualTestResult::getFitness)
+                    .average();
+
+            double fitness = opt.isPresent() ? opt.getAsDouble() : 0;
+
+            return new HistoryEntry(label, time, fitness);
         } catch (IOException e) {
             return null;
         }
