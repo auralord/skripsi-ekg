@@ -44,14 +44,14 @@ public class IndividualTest {
                 config.classCol,
                 config.dataColStart,
                 config.dataLength));
-        dataset.randomize();
+//        dataset.randomize();
 
-//        java.util.HashMap<Integer, List<Integer>> map = new java.util.HashMap<>();
-//        map.put(0, java.util.Arrays.asList(19,34,28,13,10));
-//        map.put(1, java.util.Arrays.asList(26,6,25,1,22));
-//        map.put(2, java.util.Arrays.asList(31,30,23,25,13));
-//        map.put(3, java.util.Arrays.asList(12,32,17,4,13));
-//        dataset.setTest(map);
+        java.util.HashMap<Integer, List<Integer>> map = new java.util.HashMap<>();
+        map.put(0, java.util.Arrays.asList(19,34,28,13,10));
+        map.put(1, java.util.Arrays.asList(26,6,25,1,22));
+        map.put(2, java.util.Arrays.asList(31,30,23,25,13));
+        map.put(3, java.util.Arrays.asList(12,32,17,4,13));
+        dataset.setTest(map);
 
         SVMFactory.params = svmParams;
         SVMFactory.training = dataset.getTraining();
@@ -171,7 +171,7 @@ public class IndividualTest {
                 .setEpsilon(0.00001)
                 .setThreshold(0)
                 .setMaxIter(100)
-                .setKernelParam(3.22);
+                .setKernelParam(3);
 
         GAParams gaParams = new GAParams()
                 .setCr(0.9)

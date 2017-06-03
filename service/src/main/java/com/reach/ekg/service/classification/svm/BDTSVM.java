@@ -3,7 +3,6 @@ package com.reach.ekg.service.classification.svm;
 import com.reach.ekg.persistence.params.SVMParams;
 import com.reach.ekg.service.classification.data.DataSource;
 import com.reach.ekg.service.classification.data.DataSources;
-import com.reach.ekg.service.util.IndexUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +46,6 @@ public class BDTSVM {
     public void train() {
         // Calculate kernel
         double d = params.getKernelParam();
-//        k = (x, y) -> pow(sumProduct(x, y), 2);
         k = (x, y) -> Math.exp(squaredDistance(x, y) / (-2 * pow(d, 2)));
         int n = normalised.count();
 
@@ -182,12 +180,10 @@ public class BDTSVM {
         BDTNode current = root;
         while (current.data.size() > 1) {
             int y = current.svm.test(x);
-            if (y == -1) {
+            if (y < 0) {
                 current = current.right;
-            } else if (y == 1) {
-                current = current.left;
             } else {
-                throw new IndexOutOfBoundsException();
+                current = current.left;
             }
 
             if (current.data.size() == 1) {

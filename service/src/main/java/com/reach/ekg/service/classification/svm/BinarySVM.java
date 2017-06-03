@@ -118,8 +118,11 @@ public class BinarySVM {
     }
 
     private boolean checkDA() {
-        double[] daAbs = DoubleStream.of(da).map(Math::abs).toArray();
-        return DoubleUtils.max(daAbs) < epsilon;
+        double max = 0;
+        for (double d: da) {
+            if (abs(d) > max) max = abs(d);
+        }
+        return max < epsilon;
     }
 
     public int test(double... x) {
