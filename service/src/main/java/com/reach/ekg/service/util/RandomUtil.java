@@ -23,7 +23,7 @@ public class RandomUtil {
 
         boolean[] b = new boolean[size];
         for (int i = 0; i < size; i++) {
-            b[i] = (r().nextGaussian() <= d);
+            b[i] = (r.nextGaussian() <= d);
         }
 
         return b;

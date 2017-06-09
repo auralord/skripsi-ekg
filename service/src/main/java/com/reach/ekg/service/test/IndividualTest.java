@@ -154,36 +154,4 @@ public class IndividualTest {
     public IndividualTestResult getResult() {
         return result;
     }
-
-    public static void main(String[] args) {
-        config = new Config();
-        config.pathToCSV = "data/data-mlii-rev2.csv";
-        config.delimiter = ";";
-        config.indexCol = 0;
-        config.classCol = 1;
-        config.dataColStart = 2;
-        config.dataLength = 2160;
-
-        SVMParams svmParams = new SVMParams()
-                .setLambda(0.5)
-                .setGamma(0.01)
-                .setC(1)
-                .setEpsilon(0.00001)
-                .setThreshold(0)
-                .setMaxIter(100)
-                .setKernelParam(3);
-
-        GAParams gaParams = new GAParams()
-                .setCr(0.9)
-                .setMr(0.1)
-                .setGeneration(100)
-                .setPopSize(100);
-
-        IndividualTest test = new IndividualTest(svmParams, gaParams);
-        test.run();
-        test.getResult().getClassificationResults().forEach(System.out::println);
-        test.getResult().getHistory().forEach(System.out::println);
-        System.out.print("Acc: ");
-        System.out.println(test.getResult().getAccuracy());
-    }
 }

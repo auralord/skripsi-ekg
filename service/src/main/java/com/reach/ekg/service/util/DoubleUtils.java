@@ -73,9 +73,14 @@ public class DoubleUtils {
             throw new IndexOutOfBoundsException();
         }
 
-        return IntStream.range(0, x.length)
-                .mapToDouble(i -> x[i] * y[i])
-                .sum();
+        double result = 0;
+        for (int i = 0; i < x.length; i++) {
+            result += (x[i] * y[i]);
+        }
+        return result;
+//        return IntStream.range(0, x.length)
+//                .mapToDouble(i -> x[i] * y[i])
+//                .sum();
     }
 
     public static void printMatrix(double[][] d) {
