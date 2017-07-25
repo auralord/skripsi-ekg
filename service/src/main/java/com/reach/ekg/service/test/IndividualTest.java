@@ -124,6 +124,7 @@ public class IndividualTest {
         BDTSVM svm = new BDTSVM(svmParams);
         svm.setTraining(training);
         svm.setTrainingNormalised(normalised);
+        svm.error = true;
         svm.train();
 
         int tests = test.count();

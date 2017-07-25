@@ -39,6 +39,8 @@ public class BDTSVM {
     private double[][] classAvg;
     private double[][] kernel;
 
+    public boolean error = false;
+
     public BDTSVM(SVMParams params) {
         this.params = params;
     }
@@ -144,6 +146,7 @@ public class BDTSVM {
                 node.left.data,
                 node.right.data
         ));
+        if (error) node.svm.traceErrorOn();
         node.svm.train(dataSource);
 
         if (node.left != null) {

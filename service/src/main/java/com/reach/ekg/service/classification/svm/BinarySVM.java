@@ -32,6 +32,9 @@ public class BinarySVM {
     private double[] da;
     private double b;
 
+    // Error
+    private boolean calcError;
+
     public BinarySVM(SVMParams params, Kernel k) {
         this.k = k;
         this.lambda = params.getLambda();
@@ -66,6 +69,8 @@ public class BinarySVM {
                 .max();
         if(maxHessian.isPresent()) gamma /= maxHessian.getAsDouble();
 
+        if (calcError) System.out.println(this);
+
         for (int iteration = 0; (iteration < maxIter); iteration++) {
             for (int i = 0; i < n; i++) {
                 e[i] = sumProduct(a, hessian[i]);
@@ -77,6 +82,16 @@ public class BinarySVM {
 
             for (int i = 0; i < n; i++) {
                 a[i] += da[i];
+            }
+
+            if (calcError) {
+                double error = 0;
+                for (int i = 0; i < n; i++) {
+                    int actual = ds.target(i);
+                    int predicted = test(ds.row(i));
+                    if (actual != predicted) error += (1.0 / n);
+                }
+                System.out.println(error);
             }
 
             if (checkDA()) {
@@ -132,6 +147,10 @@ public class BinarySVM {
         y += b;
 
         return (int) signum(y);
+    }
+
+    void traceErrorOn() {
+        calcError = true;
     }
 
 }
