@@ -43,12 +43,15 @@ public class History {
     private final ObjectMapper mapper = new ObjectMapper();
     private final View view = new View();
 
-    private HistoryEntry pathToEntry(String path){
+    private HistoryEntry pathToEntry(String path) {
         try {
             AggregateTestResult result = mapper.readValue(
                     new File(path), AggregateTestResult.class);
 
-            String label = path.substring(path.lastIndexOf('\\') + 1).split("\\.")[0];
+            int firstSlash = path.indexOf("\\");
+            int lastDot = path.lastIndexOf(".");
+            String label = path.substring(firstSlash + 1, lastDot);
+
             String time = result.getTime();
 
             OptionalDouble opt = result.getResults().stream()
