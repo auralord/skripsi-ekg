@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 public class Dataset {
 
-    private final int NUM_OF_CLASSES = 4;
-    private final int TEST_PER_CLASSES = 5;
+    public final static int NUM_OF_CLASSES = 4;
+    public final static int TEST_PER_CLASSES = 5;
 
     private DataSource orig;
     private DataSource origNormalised;
@@ -53,6 +53,36 @@ public class Dataset {
         System.out.println("WARNING: data has been set manually");
         this.asTest = asTest;
         separateTestTraining();
+    }
+
+    public void setLeaveOneOut(int i) {
+        int total = orig.count() - 1;
+        double[][] trainingData = new double[total][];
+        double[][] trainingDataNormalised = new double[total][];
+        int[] trainingTarget = new int[total];
+
+        double[][] testData = new double[1][];
+        double[][] testDataNormalised = new double[1][];
+        int[] testTarget = new int[1];
+
+        int current = 0;
+        for (int j = 0; j < orig.count(); j++) {
+            if (j == 1) {
+                testData[0] = orig.row(i);
+                testDataNormalised[0] = origNormalised.row(i);
+                testTarget[0] = orig.target(i);
+            } else {
+                trainingData[current] = orig.row(i);
+                trainingDataNormalised[current] = origNormalised.row(i);
+                trainingTarget[current] = orig.target(i);
+                current++;
+            }
+        }
+
+        training = new ArrayDataSource(trainingData, trainingTarget);
+        trainingNomalised = new ArrayDataSource(trainingDataNormalised, trainingTarget);
+        test = new ArrayDataSource(testData, testTarget);
+        testNormalised = new ArrayDataSource(testDataNormalised, testTarget);
     }
 
     private void separateTestTraining() {

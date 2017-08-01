@@ -51,9 +51,10 @@ public class FromFile {
             SVMParams svmParams = mapper.readValue(json.get("svmParams").traverse(), SVMParams.class);
             String label = json.get("label").asText();
             int repeat = json.get("repeat").asInt();
+            String validation = json.get("validation").asText();
 
             System.out.println("RUNNING TEST: " + label);
-            AggregateTest test = new AggregateTest(label, svmParams, gaParams);
+            AggregateTest test = new AggregateTest(label, svmParams, gaParams, validation);
             test.run(repeat);
 
             String resultPath = "results/" + label + ".json";

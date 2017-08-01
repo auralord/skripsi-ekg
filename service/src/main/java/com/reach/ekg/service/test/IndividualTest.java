@@ -12,9 +12,10 @@ import com.reach.ekg.service.classification.data.DataSources;
 import com.reach.ekg.service.classification.data.Dataset;
 import com.reach.ekg.service.classification.ga.GA;
 import com.reach.ekg.service.classification.svm.BDTSVM;
-import com.reach.ekg.service.classification.svm.SVMFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.reach.ekg.service.Config.config;
@@ -27,36 +28,46 @@ public class IndividualTest {
     private SVMParams svmParams;
     private GAParams gaParams;
 
+    // Dataset
+    private HashMap<Integer, List<Integer>> testData;
+    private Dataset dataset;
+
     // Result
     private IndividualTestResult result;
 
     public IndividualTest(SVMParams svmParams, GAParams gaParams) {
         this.svmParams = svmParams;
         this.gaParams = gaParams;
-    }
 
-    public void run() {
         // Configure dataset
-        Dataset dataset = new Dataset(DataSources.fromCSV(
+        dataset = new Dataset(DataSources.fromCSV(
                 config.pathToCSV,
                 config.delimiter,
                 config.indexCol,
                 config.classCol,
                 config.dataColStart,
                 config.dataLength));
-//        dataset.randomize();
+    }
 
-        java.util.HashMap<Integer, List<Integer>> map = new java.util.HashMap<>();
-        map.put(0, java.util.Arrays.asList(19,34,28,13,10));
-        map.put(1, java.util.Arrays.asList(26,6,25,1,22));
-        map.put(2, java.util.Arrays.asList(31,30,23,25,13));
-        map.put(3, java.util.Arrays.asList(12,32,17,4,13));
-        dataset.setTest(map);
+    public void setKFold(HashMap<Integer, List<Integer>> testData) {
+        this.testData = testData;
+        dataset.setTest(testData);
+    }
 
-        SVMFactory.params = svmParams;
-        SVMFactory.training = dataset.getTraining();
-        SVMFactory.trainingNormalised = dataset.getTrainingNomalised();
-        SVMFactory.testNormalised = dataset.getTestNormalised();
+    public void setLeaveOneOut(int i) {
+        dataset.setLeaveOneOut(i);
+        testData = new HashMap<>();
+    }
+
+    public void run() {
+        if (testData == null) {
+            testData = new HashMap<>();
+            testData.put(0, Arrays.asList(19, 34, 28, 13, 10));
+            testData.put(1, Arrays.asList(26, 6, 25, 1, 22));
+            testData.put(2, Arrays.asList(31, 30, 23, 25, 13));
+            testData.put(3, Arrays.asList(12, 32, 17, 4, 13));
+            dataset.setTest(testData);
+        }
 
         // Configure GA
         GA ga = new GA(gaParams);
@@ -87,7 +98,7 @@ public class IndividualTest {
             }
 
             double f1 = (double) correct / (double) tests;
-            double f2 = 1 - (double) selected/ (double) genes.length;
+            double f2 = 1 - (double) selected / (double) genes.length;
             double fitness = 0.85 * f1 + 0.15 * f2;
             System.out.printf("selected: %4s, f1: %.5f, fitness:%f\n", selected, f1, fitness);
             return fitness;
@@ -124,7 +135,6 @@ public class IndividualTest {
         BDTSVM svm = new BDTSVM(svmParams);
         svm.setTraining(training);
         svm.setTrainingNormalised(normalised);
-        svm.error = true;
         svm.train();
 
         int tests = test.count();

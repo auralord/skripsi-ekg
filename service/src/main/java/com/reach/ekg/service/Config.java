@@ -18,7 +18,7 @@ public class Config {
 
     public static void defaultConfig() {
         config = new Config();
-        config.pathToCSV = "data/results.csv";
+        config.pathToCSV = "data/data-mlii-rev2.csv";
         config.delimiter = ";";
         config.indexCol = 0;
         config.classCol = 1;
