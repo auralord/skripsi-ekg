@@ -105,7 +105,7 @@ public class GA {
         gBest = population.get(0);
         long t1 = System.currentTimeMillis();
         for (int i = 0; i < generation; i++) {
-            System.out.println(i);
+            System.out.println("Generation " + i);
 
             // Crossover
             for (int j = 0; j < ceil(cr * popSize); j++) {
@@ -157,40 +157,4 @@ public class GA {
         return history;
     }
 
-//    public static void main(String[] args) {
-//
-//        GA ga = new GA(new GAParams()
-//                .setCr(0.9)
-//                .setMr(0.1)
-//                .setGeneration(10)
-//                .setPopSize(10));
-//
-//        ga.setFitness(new ClassificationFitness());
-//        ga.generatePopulation(2160);
-//
-//        DataSource ds = DataSources.fromCSV("data/data-mlii-rev1.csv", ";", 0, 1, 2, 2160);
-//        Dataset dataset = new Dataset(ds);
-//        dataset.randomize();
-//
-//        SVMFactory.params = new SVMParams()
-//                .setLambda(0.5)
-//                .setGamma(0.01)
-//                .setC(1)
-//                .setEpsilon(0.00001)
-//                .setThreshold(0)
-//                .setMaxIter(100)
-//                .setKernelParam(2);
-//
-//        SVMFactory.training = dataset.getTraining();
-//        SVMFactory.trainingNormalised = dataset.getTrainingNomalised();
-//        SVMFactory.testNormalised = dataset.getTestNormalised();
-//
-//        System.out.println("PREPARE FOR JUSTICE");
-//        java.util.Date d1 = new java.util.Date();
-//        ga.run();
-//        java.util.Date d2 = new java.util.Date();
-//
-//        ga.history.forEach(System.out::println);
-//        System.out.println(d2.getTime() - d1.getTime());
-//    }
 }

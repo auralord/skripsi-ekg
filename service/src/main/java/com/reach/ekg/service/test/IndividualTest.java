@@ -6,7 +6,6 @@ import com.reach.ekg.persistence.params.GAParams;
 import com.reach.ekg.persistence.params.SVMParams;
 import com.reach.ekg.persistence.results.ClassificationResult;
 import com.reach.ekg.persistence.results.IndividualTestResult;
-import com.reach.ekg.service.Config;
 import com.reach.ekg.service.classification.data.DataSource;
 import com.reach.ekg.service.classification.data.DataSources;
 import com.reach.ekg.service.classification.data.Dataset;
@@ -49,25 +48,20 @@ public class IndividualTest {
                 config.dataLength));
     }
 
-    public void setKFold(HashMap<Integer, List<Integer>> testData) {
-        this.testData = testData;
-        dataset.setTest(testData);
-    }
-
-    public void setLeaveOneOut(int i) {
-        dataset.setLeaveOneOut(i);
-        testData = new HashMap<>();
+    public Dataset dataset() {
+        return dataset;
     }
 
     public void run() {
-        if (testData == null) {
-            testData = new HashMap<>();
-            testData.put(0, Arrays.asList(19, 34, 28, 13, 10));
-            testData.put(1, Arrays.asList(26, 6, 25, 1, 22));
-            testData.put(2, Arrays.asList(31, 30, 23, 25, 13));
-            testData.put(3, Arrays.asList(12, 32, 17, 4, 13));
-            dataset.setTest(testData);
-        }
+//        if (testData == null) {
+//            testData = new HashMap<>();
+//            testData.put(0, Arrays.asList(19, 34, 28, 13, 10));
+//            testData.put(1, Arrays.asList(26, 6, 25, 1, 22));
+//            testData.put(2, Arrays.asList(31, 30, 23, 25, 13));
+//            testData.put(3, Arrays.asList(12, 32, 17, 4, 13));
+//            dataset.setTest(testData);
+//            dataset.randomize();
+//        }
 
         // Configure GA
         GA ga = new GA(gaParams);
@@ -79,7 +73,7 @@ public class IndividualTest {
             DataSource training =
                     DataSources.subFeatures(dataset.getTraining(), genes);
             DataSource normalised =
-                    DataSources.subFeatures(dataset.getTrainingNomalised(), genes);
+                    DataSources.subFeatures(dataset.getTrainingNormalised(), genes);
             DataSource test =
                     DataSources.subFeatures(dataset.getTestNormalised(), genes);
 
@@ -128,7 +122,7 @@ public class IndividualTest {
         DataSource training =
                 DataSources.subFeatures(dataset.getTraining(), features);
         DataSource normalised =
-                DataSources.subFeatures(dataset.getTrainingNomalised(), features);
+                DataSources.subFeatures(dataset.getTrainingNormalised(), features);
         DataSource test =
                 DataSources.subFeatures(dataset.getTestNormalised(), features);
 

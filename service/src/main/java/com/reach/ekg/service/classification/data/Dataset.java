@@ -14,7 +14,7 @@ public class Dataset {
 
     private DataSource orig;
     private DataSource origNormalised;
-    private DataSource trainingNomalised;
+    private DataSource trainingNormalised;
     private DataSource training;
     private DataSource testNormalised;
     private DataSource test;
@@ -80,7 +80,7 @@ public class Dataset {
         }
 
         training = new ArrayDataSource(trainingData, trainingTarget);
-        trainingNomalised = new ArrayDataSource(trainingDataNormalised, trainingTarget);
+        trainingNormalised = new ArrayDataSource(trainingDataNormalised, trainingTarget);
         test = new ArrayDataSource(testData, testTarget);
         testNormalised = new ArrayDataSource(testDataNormalised, testTarget);
     }
@@ -123,7 +123,7 @@ public class Dataset {
         }
 
         training = new ArrayDataSource(trainingData, trainingTarget);
-        trainingNomalised = new ArrayDataSource(trainingDataNormalised, trainingTarget);
+        trainingNormalised = new ArrayDataSource(trainingDataNormalised, trainingTarget);
         test = new ArrayDataSource(testData, testTarget);
         testNormalised = new ArrayDataSource(testDataNormalised, testTarget);
     }
@@ -132,8 +132,8 @@ public class Dataset {
         return training;
     }
 
-    public DataSource getTrainingNomalised() {
-        return trainingNomalised;
+    public DataSource getTrainingNormalised() {
+        return trainingNormalised;
     }
 
     public DataSource getTest() {
