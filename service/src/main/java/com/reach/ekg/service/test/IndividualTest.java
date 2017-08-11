@@ -13,7 +13,6 @@ import com.reach.ekg.service.classification.ga.GA;
 import com.reach.ekg.service.classification.svm.BDTSVM;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -46,6 +45,8 @@ public class IndividualTest {
                 config.classCol,
                 config.dataColStart,
                 config.dataLength));
+
+        dataset.randomize();
     }
 
     public Dataset dataset() {
@@ -53,19 +54,11 @@ public class IndividualTest {
     }
 
     public void run() {
-//        if (testData == null) {
-//            testData = new HashMap<>();
-//            testData.put(0, Arrays.asList(19, 34, 28, 13, 10));
-//            testData.put(1, Arrays.asList(26, 6, 25, 1, 22));
-//            testData.put(2, Arrays.asList(31, 30, 23, 25, 13));
-//            testData.put(3, Arrays.asList(12, 32, 17, 4, 13));
-//            dataset.setTest(testData);
-//            dataset.randomize();
-//        }
 
         // Configure GA
         GA ga = new GA(gaParams);
         ga.generatePopulation(config.dataLength);
+//        ga.setFitness(g -> 0);
         ga.setFitness(genes -> {
             int selected = numOfTrue(genes);
             if (selected <= 0) return 0;
