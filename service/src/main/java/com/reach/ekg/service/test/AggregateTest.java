@@ -40,6 +40,7 @@ public class AggregateTest {
         this.label = label;
         this.svmParams = svmParams;
         this.gaParams = gaParams;
+        this.validation = FIXED;
     }
 
     public void postIteration(Runnable c) {
