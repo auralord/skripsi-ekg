@@ -19,11 +19,11 @@ public class RandomUtil {
     }
 
     public static boolean[] rand(int size) {
-        double d = r.nextGaussian();
+        double d = r.nextDouble();
 
         boolean[] b = new boolean[size];
         for (int i = 0; i < size; i++) {
-            b[i] = (r.nextGaussian() <= d);
+            b[i] = (r.nextDouble() <= d);
         }
 
         return b;
