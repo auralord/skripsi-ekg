@@ -23,6 +23,15 @@ public class DoubleUtils {
         return max.isPresent() ? max.getAsDouble() : 0;
     }
 
+    public static double sum(double... d) {
+        double sum = 0;
+        for (int i = 0; i < d.length; i++) {
+            sum += d[i];
+        }
+
+        return sum;
+    }
+
     public static double[] columnAvg(double[][] d) {
         try {
             int cols = d[0].length;
@@ -38,14 +47,6 @@ public class DoubleUtils {
             System.exit(1);
             return null;
         }
-//        return IntStream.range(0, d[0].length)
-//                .mapToDouble(i -> {
-//                    double avg = 0;
-//                    for (double[] aD : d) {
-//                        avg += aD[i];
-//                    }
-//                    return avg / d.length;
-//                }).toArray();
     }
 
     public static double squaredDistance(double[] x, double[] y) {
@@ -53,9 +54,6 @@ public class DoubleUtils {
             throw new IndexOutOfBoundsException();
         }
 
-//        return IntStream.range(0, x.length)
-//                .mapToDouble(i -> Math.pow(x[i] - y[i], 2))
-//                .sum();
         double result = 0;
         for (int i = 0; i < x.length; i++) {
             result += Math.pow(x[i] - y[i], 2);
@@ -78,9 +76,6 @@ public class DoubleUtils {
             result += (x[i] * y[i]);
         }
         return result;
-//        return IntStream.range(0, x.length)
-//                .mapToDouble(i -> x[i] * y[i])
-//                .sum();
     }
 
     public static void printMatrix(double[][] d) {
@@ -108,7 +103,7 @@ public class DoubleUtils {
         for (double[] d : matrix) {
             StringBuilder builder = new StringBuilder();
             for (double d1 : d) {
-                builder.append(d1).append(";");
+                builder.append(d1).append(",");
             }
             lines.add(builder.toString());
         }
