@@ -15,6 +15,16 @@ public class IndexUtils {
         return max;
     }
 
+    public static int minOfArray(double[] d) {
+        int min = 0;
+        for (int i = 0; i < d.length; i++) {
+            if (d[i] < d[min]) {
+                min = i;
+            }
+        }
+        return min;
+    }
+
     public static int[] maxOfMatrix(double[][] d) {
         int maxX = 0;
         int maxY = 0;
