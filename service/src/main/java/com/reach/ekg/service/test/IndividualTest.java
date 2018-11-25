@@ -9,8 +9,11 @@ import com.reach.ekg.persistence.results.IndividualTestResult;
 import com.reach.ekg.service.classification.data.DataSource;
 import com.reach.ekg.service.classification.data.DataSources;
 import com.reach.ekg.service.classification.data.Dataset;
+import com.reach.ekg.service.classification.ga.Chromosome;
 import com.reach.ekg.service.classification.ga.GA;
+import com.reach.ekg.service.classification.ga.operators.BinaryOperators;
 import com.reach.ekg.service.classification.svm.BDTSVM;
+import com.reach.ekg.service.util.RandomUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,31 +60,34 @@ public class IndividualTest {
 
         // Configure GA
         GA ga = new GA(gaParams);
-        ga.generatePopulation(config.dataLength);
-//        ga.setFitness(g -> 0);
-        ga.setFitness(genes -> {
+        ga.setCrossover(BinaryOperators::oneCutPoint);
+        ga.setMutation(BinaryOperators::singleMutation);
+        ga.generatePopulation(config.dataLength, i -> {
+            boolean[] genes = RandomUtil.rand(i);
+            return new Chromosome<>(genes);
+        });
+        ga.setFitness(chromosome -> {
+            boolean[] genes = (boolean[]) chromosome.genes();
+
             int selected = numOfTrue(genes);
             if (selected <= 0) return 0;
 
-            DataSource training =
-                    DataSources.subFeatures(dataset.getTraining(), genes);
-            DataSource normalised =
-                    DataSources.subFeatures(dataset.getTrainingNormalised(), genes);
-            DataSource test =
-                    DataSources.subFeatures(dataset.getTestNormalised(), genes);
+            DataSource training = DataSources.subFeatures(dataset.getTraining(), genes);
+            DataSource normalised = DataSources.subFeatures(dataset.getTrainingNormalised(), genes);
+            DataSource test = DataSources.subFeatures(dataset.getTestNormalised(), genes);
 
-            BDTSVM svm = new BDTSVM(svmParams);
-            svm.setTraining(training);
-            svm.setTrainingNormalised(normalised);
-            svm.train();
+            BDTSVM model = new BDTSVM(svmParams);
+            model.setTraining(training);
+            model.setTrainingNormalised(normalised);
+            model.train();
 
             int tests = test.count();
             int correct = 0;
             for (int i = 0; i < tests; i++) {
                 double[] x = test.row(i);
-                int y = svm.test(x);
-                int y1 = test.target(i);
-                if (y == y1) correct++;
+                int y = model.test(x);
+                int t = test.target(i);
+                if (y == t) correct++;
             }
 
             double f1 = (double) correct / (double) tests;
@@ -107,28 +113,25 @@ public class IndividualTest {
 
         // Record available things
         List<Double> history = ga.getHistory();
-        boolean[] features = ga.gBest().genes();
+        boolean[] features = (boolean[]) ga.gBest().genes();
         double fitness = ga.gBest().fitness();
 
         // Classification for one last time (TM)
         List<ClassificationResult> cResults = new ArrayList<>();
-        DataSource training =
-                DataSources.subFeatures(dataset.getTraining(), features);
-        DataSource normalised =
-                DataSources.subFeatures(dataset.getTrainingNormalised(), features);
-        DataSource test =
-                DataSources.subFeatures(dataset.getTestNormalised(), features);
+        DataSource training = DataSources.subFeatures(dataset.getTraining(), features);
+        DataSource normalised = DataSources.subFeatures(dataset.getTrainingNormalised(), features);
+        DataSource test = DataSources.subFeatures(dataset.getTestNormalised(), features);
 
-        BDTSVM svm = new BDTSVM(svmParams);
-        svm.setTraining(training);
-        svm.setTrainingNormalised(normalised);
-        svm.train();
+        BDTSVM model = new BDTSVM(svmParams);
+        model.setTraining(training);
+        model.setTrainingNormalised(normalised);
+        model.train();
 
         int tests = test.count();
         int correct = 0;
         for (int i = 0; i < tests; i++) {
             double[] x = test.row(i);
-            int y = svm.test(x);
+            int y = model.test(x);
             int y1 = test.target(i);
             if (y == y1) correct++;
             cResults.add(new ClassificationResult(y, y1));

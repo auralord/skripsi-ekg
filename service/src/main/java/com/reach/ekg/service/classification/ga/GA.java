@@ -1,14 +1,13 @@
 package com.reach.ekg.service.classification.ga;
 
 import com.reach.ekg.persistence.params.GAParams;
+import com.reach.ekg.service.classification.ga.operators.BinaryOperators;
 import com.reach.ekg.service.util.RandomUtil;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-import static com.reach.ekg.service.util.RandomUtil.rand;
 import static java.lang.Math.ceil;
 
 public class GA {
@@ -16,7 +15,7 @@ public class GA {
     private static final double CONVERGENCE_THRESHOLD = 0.015;
 
     public interface FitnessFunction {
-        double calculate(boolean[] b);
+        double calculate(Chromosome chromosome);
     }
 
     public interface MutationOperator {
@@ -29,6 +28,10 @@ public class GA {
 
     public interface CrossoverOperator {
         Chromosome cross(Chromosome c1, Chromosome c2);
+    }
+
+    public interface InitializationOperator {
+        Chromosome init(int length);
     }
 
     private double cr;
@@ -53,23 +56,9 @@ public class GA {
         this.popSize = params.getPopSize();
         this.generation = params.getGeneration();
 
-        // One cut-point
-        this.crossover = ((c1, c2) -> {
-            boolean[] newGenes = c2.genes().clone();
-            int i = r.nextInt(c1.genes().length);
-            System.arraycopy(c1.genes(), 0, newGenes, 0, i);
-
-            return new Chromosome(newGenes);
-        });
-
-        // Single mutation
-        this.mutation = (c1) -> {
-            int i = r.nextInt(c1.genes().length);
-            boolean[] newGenes = c1.genes().clone();
-            newGenes[i] = !newGenes[i];
-
-            return new Chromosome(newGenes);
-        };
+        // Crossover + Mutation
+        this.crossover = BinaryOperators::oneCutPoint;
+        this.mutation = BinaryOperators::singleMutation;
 
         // Binary tournament
         this.selection = (p, n) -> {
@@ -88,15 +77,22 @@ public class GA {
         };
     }
 
+    public void setCrossover(CrossoverOperator crossover) {
+        this.crossover = crossover;
+    }
+
+    public void setMutation(MutationOperator mutation) {
+        this.mutation = mutation;
+    }
+
     public void setFitness(FitnessFunction fitness) {
         this.fitness = fitness;
     }
 
-    public void generatePopulation(int geneLength) {
+    public void generatePopulation(int geneLength, InitializationOperator method) {
         population = new ArrayList<>();
         for (int i = 0; i < popSize; i++) {
-            boolean[] b = rand(geneLength);
-            population.add(new Chromosome(b));
+            population.add(method.init(geneLength));
         }
     }
 
@@ -122,10 +118,10 @@ public class GA {
 
             // Evaluation
             population.parallelStream()
-                    .forEach(c -> c.calculateFitness(fitness));
+                    .forEach(c -> c.setFitness(fitness.calculate(c)));
 
             population.stream()
-                    .max(Comparator.naturalOrder())
+                    .max(Chromosome::compareTo)
                     .ifPresent(this::compareGBest);
 
             if(hasConverged()) break;
@@ -137,7 +133,9 @@ public class GA {
         System.out.println(t2 - t1);
     }
 
-    private void compareGBest(Chromosome currentGBest) {
+    private void compareGBest(Object o) {
+        Chromosome currentGBest = (Chromosome) o;
+
         if (currentGBest.fitness() > gBest.fitness()) {
             gBest = currentGBest;
         }
@@ -146,7 +144,7 @@ public class GA {
 
     private boolean hasConverged() {
         int i = history.size() - 1;
-        return i >= 25 && (history.get(i) - history.get(i - 10)) < CONVERGENCE_THRESHOLD;
+        return i >= 25;
     }
 
     public Chromosome gBest() {
