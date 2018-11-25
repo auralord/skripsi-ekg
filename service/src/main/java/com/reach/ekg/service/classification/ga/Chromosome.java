@@ -1,7 +1,5 @@
 package com.reach.ekg.service.classification.ga;
 
-import java.util.Arrays;
-
 public class Chromosome<T> implements Comparable<Chromosome> {
 
     private T genes;
