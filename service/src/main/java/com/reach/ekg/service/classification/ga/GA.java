@@ -140,11 +140,12 @@ public class GA {
             gBest = currentGBest;
         }
         history.add(gBest.fitness());
+        System.out.println(gBest.fitness());
     }
 
     private boolean hasConverged() {
         int i = history.size() - 1;
-        return i >= 25;
+        return i >= generation;
     }
 
     public Chromosome gBest() {
