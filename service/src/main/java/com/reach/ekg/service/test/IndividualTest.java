@@ -12,18 +12,30 @@ import com.reach.ekg.service.classification.data.Dataset;
 import com.reach.ekg.service.classification.ga.Chromosome;
 import com.reach.ekg.service.classification.ga.GA;
 import com.reach.ekg.service.classification.ga.operators.BinaryOperators;
+import com.reach.ekg.service.classification.ga.operators.RealOperators;
 import com.reach.ekg.service.classification.svm.BDTSVM;
 import com.reach.ekg.service.util.RandomUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import static com.reach.ekg.service.Config.config;
 import static com.reach.ekg.service.util.DateUtils.now;
 import static com.reach.ekg.service.util.IndexUtils.numOfTrue;
 
 public class IndividualTest {
+
+    // Params' params
+    private final int PARAMS = 5;
+    private final double[] MAX_BOUND = {5.0, 100.0, 2.0, 50.0, 1.0};
+    private final double[] MIN_BOUND = {0.0, 0.01, 10e-7, 10e-3, 10e-7};
+    private final int KERNEL_PARAMS = 0;
+    private final int LAMBDA = 1;
+    private final int GAMMA = 2;
+    private final int C = 3;
+    private final int EPSILON = 4;
 
     // Params
     private SVMParams svmParams;
@@ -58,14 +70,33 @@ public class IndividualTest {
 
     public void run() {
 
-        // Configure GA
+        // Print data set info
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String asTest = mapper.writeValueAsString(dataset.getAsTest());
+            System.out.println(asTest);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+
+        /*
+         *
+         * Begin GA phase 1 for feature selection
+         *
+         * */
+
+        // Configure GA for feature selection
         GA ga = new GA(gaParams);
         ga.setCrossover(BinaryOperators::oneCutPoint);
         ga.setMutation(BinaryOperators::singleMutation);
+
         ga.generatePopulation(config.dataLength, i -> {
             boolean[] genes = RandomUtil.rand(i);
             return new Chromosome<>(genes);
         });
+
+//        ga.setFitness(c -> 0);
         ga.setFitness(chromosome -> {
             boolean[] genes = (boolean[]) chromosome.genes();
 
@@ -93,36 +124,88 @@ public class IndividualTest {
             double f1 = (double) correct / (double) tests;
             double f2 = 1 - (double) selected / (double) genes.length;
             double fitness = 0.85 * f1 + 0.15 * f2;
-            System.out.printf("selected: %4s, f1: %.5f, fitness:%f\n", selected, f1, fitness);
+//            System.out.printf("selected: %4s, f1: %.5f, fitness:%f\n", selected, f1, fitness);
             return fitness;
         });
 
-        // Print data set info
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            String asTest = mapper.writeValueAsString(dataset.getAsTest());
-            System.out.println(asTest);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        // RUN!
+        // Run GA for feature selection
         String begin = now();
         ga.run();
-        String end = now();
 
-        // Record available things
-        List<Double> history = ga.getHistory();
+        // Generate data for next phase
         boolean[] features = (boolean[]) ga.gBest().genes();
-        double fitness = ga.gBest().fitness();
-
-        // Classification for one last time (TM)
-        List<ClassificationResult> cResults = new ArrayList<>();
         DataSource training = DataSources.subFeatures(dataset.getTraining(), features);
         DataSource normalised = DataSources.subFeatures(dataset.getTrainingNormalised(), features);
         DataSource test = DataSources.subFeatures(dataset.getTestNormalised(), features);
 
-        BDTSVM model = new BDTSVM(svmParams);
+        /*
+        *
+        * Begin GA phase 2 for parameter optimization
+        *
+        * */
+
+        // Configure GA for parameter optimization
+        RealOperators rcga = new RealOperators(MAX_BOUND, MIN_BOUND);
+
+        GA ga2 = new GA(gaParams.setGeneration(100));
+        ga2.setCrossover(rcga::crossover);
+        ga2.setMutation(rcga::mutation);
+
+        Random r = RandomUtil.r();
+        ga2.generatePopulation(2, index -> {
+            double[] genes = new double[PARAMS];
+            for (int i = 0; i < PARAMS; i++) {
+                genes[i] = MIN_BOUND[i] + r.nextGaussian() * (MAX_BOUND[i] - MIN_BOUND[i]);
+            }
+            return new Chromosome<>(genes);
+        });
+
+//        ga2.setFitness(c -> {
+//            double x = ((double[]) c.genes())[1];
+//
+//            return x * x - 3 * x;
+//        });
+        ga2.setFitness(chromosome -> {
+            double[] genes = (double[]) chromosome.genes();
+            SVMParams newParams = toSVMParams(genes);
+
+            BDTSVM model = new BDTSVM(newParams);
+            model.setTraining(training);
+            model.setTrainingNormalised(normalised);
+            model.train();
+
+            int tests = test.count();
+            int correct = 0;
+            for (int i = 0; i < tests; i++) {
+                double[] x = test.row(i);
+                int y = model.test(x);
+                int t = test.target(i);
+                if (y == t) correct++;
+            }
+
+//            try {
+//                System.out.println(mapper.writeValueAsString(newParams));
+//            } catch (JsonProcessingException e) {
+//                e.printStackTrace();
+//            }
+
+//            System.out.println("Akurasi: " + (double) correct / (double) tests);
+            return (double) correct / (double) tests;
+        });
+
+        // Run GA for parameter optimization
+        ga2.run();
+        String end = now();
+
+        // Record available things
+        List<Double> history = ga.getHistory();
+        double fitness = ga.gBest().fitness();
+
+        // Classification for one last time (TM)
+        List<ClassificationResult> cResults = new ArrayList<>();
+
+        SVMParams newParams = toSVMParams((double[]) ga2.gBest().genes());
+        BDTSVM model = new BDTSVM(newParams);
         model.setTraining(training);
         model.setTrainingNormalised(normalised);
         model.train();
@@ -150,9 +233,24 @@ public class IndividualTest {
         result.setAccuracy(accuracy);
         result.setFeaturesPercentage(featurePercentage);
         result.setFitness(fitness);
+
+        System.out.println("Akurasi akhir: " + (accuracy * 100) + "%");
+        System.out.println("Parameter SVM: " + newParams);
     }
 
     public IndividualTestResult getResult() {
         return result;
+    }
+
+    private SVMParams toSVMParams(double[] genes) {
+        return new SVMParams()
+                .setKernelParam(genes[KERNEL_PARAMS])
+                .setLambda(genes[LAMBDA])
+                .setGamma(genes[GAMMA])
+                .setC(genes[C])
+                .setEpsilon(genes[EPSILON])
+                .setThreshold(0)
+                .setMaxIter(100);
+
     }
 }
