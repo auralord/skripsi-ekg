@@ -30,7 +30,7 @@ public class IndividualTest {
     // Params' params
     private final int PARAMS = 5;
     private final double[] MAX_BOUND = {5.0, 100.0, 2.0, 50.0, 1.0};
-    private final double[] MIN_BOUND = {0.0, 0.01, 10e-7, 10e-3, 10e-7};
+    private final double[] MIN_BOUND = {0.0, 0.01, 1e-7, 1e-3, 1e-7};
     private final int KERNEL_PARAMS = 0;
     private final int LAMBDA = 1;
     private final int GAMMA = 2;
@@ -139,10 +139,10 @@ public class IndividualTest {
         DataSource test = DataSources.subFeatures(dataset.getTestNormalised(), features);
 
         /*
-        *
-        * Begin GA phase 2 for parameter optimization
-        *
-        * */
+         *
+         * Begin GA phase 2 for parameter optimization
+         *
+         * */
 
         // Configure GA for parameter optimization
         RealOperators rcga = new RealOperators(MAX_BOUND, MIN_BOUND);
@@ -183,12 +183,7 @@ public class IndividualTest {
                 if (y == t) correct++;
             }
 
-//            try {
-//                System.out.println(mapper.writeValueAsString(newParams));
-//            } catch (JsonProcessingException e) {
-//                e.printStackTrace();
-//            }
-
+            System.out.println(newParams);
 //            System.out.println("Akurasi: " + (double) correct / (double) tests);
             return (double) correct / (double) tests;
         });
