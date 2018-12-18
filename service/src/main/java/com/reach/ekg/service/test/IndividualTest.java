@@ -16,10 +16,11 @@ import com.reach.ekg.service.classification.ga.operators.RealOperators;
 import com.reach.ekg.service.classification.svm.BDTSVM;
 import com.reach.ekg.service.util.RandomUtil;
 
+import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.HashMap;
 
 import static com.reach.ekg.service.Config.config;
 import static com.reach.ekg.service.util.DateUtils.now;
@@ -29,8 +30,12 @@ public class IndividualTest {
 
     // Params' params
     private final int PARAMS = 5;
-    private final double[] MAX_BOUND = {5.0, 100.0, 2.0, 50.0, 1.0};
+    private final double[] MAX_BOUND = {5.0, 100.0, 2.0, 50.0, 1};
     private final double[] MIN_BOUND = {0.0, 0.01, 1e-7, 1e-3, 1e-7};
+//    private final double[] MAX_BOUND = {2.0, 0.5, 0.01, 50, 1e-7};
+//    private final double[] MIN_BOUND = {2.0, 0.5, 0.01, 50, 1e-7};
+//    private final double[] MAX_BOUND = {2.0, 0.5, 0.01, 50, 1e-7};
+//    private final double[] MIN_BOUND = {2.0, 0.5, 0.01, 0.01, 1e-7};
     private final int KERNEL_PARAMS = 0;
     private final int LAMBDA = 1;
     private final int GAMMA = 2;
@@ -96,7 +101,6 @@ public class IndividualTest {
             return new Chromosome<>(genes);
         });
 
-//        ga.setFitness(c -> 0);
         ga.setFitness(chromosome -> {
             boolean[] genes = (boolean[]) chromosome.genes();
 
@@ -123,9 +127,7 @@ public class IndividualTest {
 
             double f1 = (double) correct / (double) tests;
             double f2 = 1 - (double) selected / (double) genes.length;
-            double fitness = 0.85 * f1 + 0.15 * f2;
-//            System.out.printf("selected: %4s, f1: %.5f, fitness:%f\n", selected, f1, fitness);
-            return fitness;
+            return 0.85 * f1 + 0.15 * f2;
         });
 
         // Run GA for feature selection
@@ -152,19 +154,15 @@ public class IndividualTest {
         ga2.setMutation(rcga::mutation);
 
         Random r = RandomUtil.r();
-        ga2.generatePopulation(2, index -> {
+        ga2.generatePopulation(5, index -> {
             double[] genes = new double[PARAMS];
             for (int i = 0; i < PARAMS; i++) {
-                genes[i] = MIN_BOUND[i] + r.nextGaussian() * (MAX_BOUND[i] - MIN_BOUND[i]);
+                genes[i] = MIN_BOUND[i] + r.nextDouble() * (MAX_BOUND[i] - MIN_BOUND[i]);
             }
+            System.out.println(Arrays.toString(genes));
             return new Chromosome<>(genes);
         });
 
-//        ga2.setFitness(c -> {
-//            double x = ((double[]) c.genes())[1];
-//
-//            return x * x - 3 * x;
-//        });
         ga2.setFitness(chromosome -> {
             double[] genes = (double[]) chromosome.genes();
             SVMParams newParams = toSVMParams(genes);
@@ -183,8 +181,6 @@ public class IndividualTest {
                 if (y == t) correct++;
             }
 
-            System.out.println(newParams);
-//            System.out.println("Akurasi: " + (double) correct / (double) tests);
             return (double) correct / (double) tests;
         });
 
