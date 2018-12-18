@@ -89,6 +89,10 @@ public class GA {
         this.fitness = fitness;
     }
 
+    public void setSelection(SelectionOperator selection) {
+        this.selection = selection;
+    }
+
     public void generatePopulation(int geneLength, InitializationOperator method) {
         population = new ArrayList<>();
         for (int i = 0; i < popSize; i++) {
@@ -134,13 +138,18 @@ public class GA {
     }
 
     private void compareGBest(Object o) {
-        Chromosome currentGBest = (Chromosome) o;
+        Chromosome c = (Chromosome) o;
+        System.out.println("Popltn. GBest: " + c.fitness());
 
-        if (currentGBest.fitness() > gBest.fitness()) {
-            gBest = currentGBest;
+        if (c.fitness() > gBest.fitness()) {
+            gBest = c;
         }
         history.add(gBest.fitness());
-        System.out.println(gBest.fitness());
+        System.out.println("Current GBest: " + gBest.fitness());
+
+        if (gBest.genes() instanceof double[]) {
+            System.out.println("GBest Genes: " + java.util.Arrays.toString((double[]) gBest.genes()));
+        }
     }
 
     private boolean hasConverged() {
